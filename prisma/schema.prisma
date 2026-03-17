@@ -1,0 +1,129 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id       Int     @id @default(autoincrement())
+  email    String  @unique
+  password String
+  name     String?
+  role     String  @default("USER") // USER або ADMIN
+
+  recipes  Recipe[]      @relation("UserRecipes")
+  comments Comment[]
+  likes    Like[]
+  saved    SavedRecipe[]
+
+  createdAt DateTime @default(now())
+}
+
+model Recipe {
+  id          Int     @id @default(autoincrement())
+  title       String
+  description String?
+  cookingTime Int
+  difficulty  String
+  imageUrl    String?
+
+  steps        Step[]
+  category     Category           @relation(fields: [categoryId], references: [id])
+  categoryId   Int
+  cuisine      Cuisine            @relation(fields: [cuisineId], references: [id])
+  cuisineId    Int
+  dietaryNeeds DietaryNeed[]
+  ingredients  RecipeIngredient[]
+
+  comments Comment[]
+  likes    Like[]
+  savedBy  SavedRecipe[]
+
+  author   User @relation("UserRecipes", fields: [authorId], references: [id])
+  authorId Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Step {
+  id           Int     @id @default(autoincrement())
+  order        Int
+  content      String
+  stepImageUrl String?
+
+  recipe   Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId Int
+}
+
+model Category {
+  id      Int      @id @default(autoincrement())
+  name    String   @unique
+  slug    String   @unique
+  recipes Recipe[]
+}
+
+model Cuisine {
+  id      Int      @id @default(autoincrement())
+  name    String   @unique
+  recipes Recipe[]
+}
+
+model DietaryNeed {
+  id      Int      @id @default(autoincrement())
+  name    String   @unique
+  recipes Recipe[]
+}
+
+model Ingredient {
+  id      Int                @id @default(autoincrement())
+  name    String             @unique
+  recipes RecipeIngredient[]
+}
+
+model RecipeIngredient {
+  recipe       Recipe     @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId     Int
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
+  ingredientId Int
+  amount       String
+  unit         String
+
+  @@id([recipeId, ingredientId])
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  text      String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  recipe    Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId  Int
+}
+
+model Like {
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   Int
+  recipe   Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId Int
+
+  @@id([userId, recipeId])
+}
+
+model SavedRecipe {
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId   Int
+  recipe   Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId Int
+
+  @@id([userId, recipeId])
+}
