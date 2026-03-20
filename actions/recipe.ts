@@ -48,6 +48,26 @@ export async function fetchRecipeById(id: number) {
   }
 }
 
+export async function fetchRelatedRecipes(categoryId: number, currentRecipeId: number) {
+  try {
+    return await prisma.recipe.findMany({
+      where: {
+        categoryId: categoryId,
+        NOT: {
+          id: currentRecipeId,
+        },
+      },
+      take: 3,
+      include: {
+        category: true,
+        author: { select: { name: true } },
+      },
+    });
+  } catch (error) {
+    console.error("Помилка при отриманні схожих рецептів:", error);
+    return [];
+  }
+}
 export async function createRecipe(formData: FormData) {
   // Тут буде логіка збереження
   // revalidatePath('/') -- оновлює головну сторінку після додавання

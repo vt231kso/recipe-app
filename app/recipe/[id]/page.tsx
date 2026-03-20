@@ -1,18 +1,23 @@
-import { fetchRecipeById } from '@/actions/recipe';
+import { fetchRecipeById,fetchRelatedRecipes } from '@/actions/recipe';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
+import RecipeCard from '@/components/RecipeCard';
+import { RecipeWithDetails } from '@/types/recipe';
+import Link from 'next/link';
 
 export default async function RecipePage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
   const recipeId = parseInt(resolvedParams.id);
 
 
-  const recipe = await fetchRecipeById(recipeId);
+  const recipe = await fetchRecipeById(recipeId) as RecipeWithDetails | null;
 
   if (!recipe) {
     notFound();
   }
 
+  const relatedRecipesData = await fetchRelatedRecipes(recipe.category.id, recipe.id);
+  const relatedRecipes = (relatedRecipesData as unknown) as RecipeWithDetails[];
   return (
     <main className="bg-[#FDFCF9] min-h-screen pb-24">
       <div className="max-w-4xl mx-auto px-6 pt-16 pb-12 text-center">
@@ -65,12 +70,12 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
                 <h2 className="text-4xl font-serif text-gray-900">Інгредієнти</h2>
               </div>
               <span className="bg-[#F3F1E9] px-4 py-2 rounded-xl font-bold text-gray-500 text-sm uppercase tracking-tighter">
-        {recipe.ingredients.length} позицій
+        {recipe.ingredients?.length || 0} позицій
       </span>
             </div>
 
             <ul className="grid grid-cols-1 gap-y-4">
-              {recipe.ingredients.map((item) => (
+              {recipe.ingredients?.map((item) => (
                 <li
                   key={`${item.recipeId}-${item.ingredientId}`}
                   className="flex items-center group py-3 px-4 rounded-2xl hover:bg-[#FDFCF9] transition-colors"
@@ -104,12 +109,12 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
           </div>
 
           <div className="space-y-16">
-            {recipe.steps.map((step, index) => (
+            {recipe.steps?.map((step, index) => (
               <div key={step.id} className="group">
 
                 <div className="inline-block bg-[#F3F1E9] px-6 py-2 rounded-t-2xl border-b-4 border-[#86E377] mb-0 ml-4 shadow-sm">
                   <span className="text-sm font-black text-gray-700 uppercase tracking-tighter">
-                    {index + 1}/{recipe.steps.length}. {step.content.slice(0, 30)}...
+                    {index + 1}/{recipe.steps?.length}. {step.content.slice(0, 30)}...
                   </span>
                 </div>
 
@@ -135,6 +140,22 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
           </div>
         </section>
       </div>
+
+          {relatedRecipes.length > 0 && (
+            <section className="max-w-7xl mx-auto px-6 mt-32 pt-20 border-t border-gray-100">
+              <div className="flex flex-col mb-12">
+                <h2 className="text-5xl font-serif text-gray-900 mb-4 text-center md:text-left">Схожі рецепти</h2>
+                <p className="text-gray-500 italic text-lg text-center md:text-left">
+                  Вам також може сподобатися щось із категорії {recipe.category.name}
+                </p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-16">
+                {relatedRecipes.map((rel) => (
+                  <RecipeCard key={rel.id} recipe={rel} />
+                ))}
+              </div>
+            </section>
+          )}
     </main>
   );
 }
