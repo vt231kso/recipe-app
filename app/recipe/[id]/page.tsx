@@ -16,8 +16,7 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
     notFound();
   }
 
-  const relatedRecipesData = await fetchRelatedRecipes(recipe.category.id, recipe.id);
-  const relatedRecipes = (relatedRecipesData as unknown) as RecipeWithDetails[];
+  const relatedRecipes = (await fetchRelatedRecipes(recipe.category.id, recipe.id)) as RecipeWithDetails[];
   return (
     <main className="bg-[#FDFCF9] min-h-screen pb-24">
       <div className="max-w-4xl mx-auto px-6 pt-16 pb-12 text-center">

@@ -5,7 +5,8 @@ import RecipeCard from '@/components/RecipeCard'
 import { RecipeWithDetails } from '@/types/recipe'
 
 export default async function HomePage() {
-  const recipes:RecipeWithDetails[] = await fetchRecipes();
+  const recipesData = await fetchRecipes();
+  const recipes = (recipesData as unknown) as RecipeWithDetails[];
 
   return (
     <main className="max-w-7xl mx-auto px-6 py-12">

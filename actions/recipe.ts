@@ -3,7 +3,7 @@
 import { prisma } from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
 
-// Функція для отримання всіх рецептів
+
 export async function fetchRecipes() {
   return await prisma.recipe.findMany({
     include: { category: true, author: true },
@@ -60,8 +60,20 @@ export async function fetchRelatedRecipes(categoryId: number, currentRecipeId: n
       take: 3,
       include: {
         category: true,
-        author: { select: { name: true } },
+        author: true,
+        ingredients: {
+          include: {
+            ingredient: true,
+          },
+        },
+        steps: {
+          orderBy: {
+            order: 'asc',
+          },
+        },
       },
+
+
     });
   } catch (error) {
     console.error("Помилка при отриманні схожих рецептів:", error);
