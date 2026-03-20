@@ -11,7 +11,43 @@ export async function fetchRecipes() {
   })
 }
 
-// Функція для створення рецепту (знадобиться потім для форми)
+export async function fetchRecipeById(id: number) {
+
+  if (!id || isNaN(id)) return null;
+
+  try {
+    const recipe = await prisma.recipe.findUnique({
+      where: { id },
+      include: {
+        category: true,
+        cuisine: true,
+        author: {
+          select: {
+            name: true,
+            role: true,
+          },
+        },
+        ingredients: {
+          include: {
+            ingredient: true,
+          },
+        },
+        steps: {
+          orderBy: {
+            order: 'asc',
+          },
+        },
+        dietaryNeeds: true,
+      },
+    });
+
+    return recipe;
+  } catch (error) {
+    console.error("Помилка Prisma:", error);
+    return null;
+  }
+}
+
 export async function createRecipe(formData: FormData) {
   // Тут буде логіка збереження
   // revalidatePath('/') -- оновлює головну сторінку після додавання
