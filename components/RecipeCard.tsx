@@ -1,17 +1,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-// Описуємо структуру даних рецепта
+import { RecipeWithDetails } from '@/types/recipe';
+
 interface RecipeCardProps {
-  recipe: {
-    id: number;
-    title: string;
-    imageUrl: string | null;
-    difficulty: string;
-    cookingTime: number;
-    category: { name: string };
-    author: { name: string };
-  };
+  recipe: RecipeWithDetails;
 }
 
 export default function RecipeCard({ recipe }: RecipeCardProps) {

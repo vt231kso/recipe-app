@@ -11,7 +11,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <Navbar />
     </header>
 
-    {/* Додаємо min-h-screen сюди, щоб футер (потім) був внизу */}
     <div className="min-h-screen">
       {children}
     </div>

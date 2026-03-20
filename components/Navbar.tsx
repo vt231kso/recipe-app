@@ -10,7 +10,7 @@ export default function Navbar() {
           <Link href="/tips" className="hover:text-gray-500">Лайфхаки</Link>
         </nav>
 
-        {/* Логотип Shuba-style */}
+
         <Link href="/" className="text-5xl font-serif italic font-black lowercase tracking-tighter">
           shuba
         </Link>

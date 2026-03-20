@@ -4,7 +4,7 @@ export default function HeaderTop() {
   return (
     <div className="border-b bg-red py-3">
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        {/* Пошук */}
+
         <div className="relative w-1/3">
           <input
             type="text"
@@ -14,7 +14,7 @@ export default function HeaderTop() {
           <Search className="absolute right-3 top-2.5 w-4 h-4 text-gray-400" />
         </div>
 
-        {/* Соцмережі та Кабінет */}
+
         <div className="flex items-center gap-6">
           <div className="flex gap-3 text-gray-600 border-r pr-6">
             <Facebook className="w-5 h-5 cursor-pointer hover:text-blue-600" />
