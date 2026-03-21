@@ -2,16 +2,25 @@
 
 import { prisma } from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
+import {RecipePreview, RecipeWithDetails} from "@/types/recipe";
 
 
-export async function fetchRecipes() {
+export async function fetchRecipes(): Promise<RecipePreview[]> {
   return await prisma.recipe.findMany({
-    include: { category: true, author: true },
+    select: {
+      id: true,
+      title: true,
+      imageUrl: true,
+      difficulty: true,
+      cookingTime: true,
+      category: { select: { name: true } },
+      author: { select: { name: true } },
+    },
     orderBy: { createdAt: 'desc' }
-  })
+  });
 }
 
-export async function fetchRecipeById(id: number) {
+export async function fetchRecipeById(id: number):Promise<RecipeWithDetails | null> {
 
   if (!id || isNaN(id)) return null;
 
@@ -21,12 +30,7 @@ export async function fetchRecipeById(id: number) {
       include: {
         category: true,
         cuisine: true,
-        author: {
-          select: {
-            name: true,
-            role: true,
-          },
-        },
+        author: true,
         ingredients: {
           include: {
             ingredient: true,
@@ -41,14 +45,14 @@ export async function fetchRecipeById(id: number) {
       },
     });
 
-    return recipe;
+    return recipe as RecipeWithDetails | null;
   } catch (error) {
     console.error("Помилка Prisma:", error);
     return null;
   }
 }
 
-export async function fetchRelatedRecipes(categoryId: number, currentRecipeId: number) {
+export async function fetchRelatedRecipes(categoryId: number, currentRecipeId: number):Promise<RecipePreview[]> {
   try {
     return await prisma.recipe.findMany({
       where: {
@@ -58,22 +62,15 @@ export async function fetchRelatedRecipes(categoryId: number, currentRecipeId: n
         },
       },
       take: 3,
-      include: {
-        category: true,
-        author: true,
-        ingredients: {
-          include: {
-            ingredient: true,
-          },
-        },
-        steps: {
-          orderBy: {
-            order: 'asc',
-          },
-        },
+      select: {
+        id: true,
+        title: true,
+        imageUrl: true,
+        difficulty: true,
+        cookingTime: true,
+        category: { select: { name: true } },
+        author: { select: { name: true } },
       },
-
-
     });
   } catch (error) {
     console.error("Помилка при отриманні схожих рецептів:", error);

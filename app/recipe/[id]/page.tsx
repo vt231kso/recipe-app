@@ -10,13 +10,13 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
   const recipeId = parseInt(resolvedParams.id);
 
 
-  const recipe = await fetchRecipeById(recipeId) as RecipeWithDetails | null;
+  const recipe = await fetchRecipeById(recipeId);
 
   if (!recipe) {
     notFound();
   }
 
-  const relatedRecipes = (await fetchRelatedRecipes(recipe.category.id, recipe.id)) as RecipeWithDetails[];
+  const relatedRecipes = (await fetchRelatedRecipes(recipe.category.id, recipe.id));
   return (
     <main className="bg-[#FDFCF9] min-h-screen pb-24">
       <div className="max-w-4xl mx-auto px-6 pt-16 pb-12 text-center">

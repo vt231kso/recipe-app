@@ -1,10 +1,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { RecipeWithDetails } from '@/types/recipe';
+import { RecipePreview, RecipeWithDetails } from '@/types/recipe';
 
 interface RecipeCardProps {
-  recipe: RecipeWithDetails;
+  recipe: RecipePreview | RecipeWithDetails;
 }
 
 export default function RecipeCard({ recipe }: RecipeCardProps) {
@@ -19,12 +19,12 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
               alt={recipe.title}
               fill
               className="object-cover group-hover:scale-105 transition-transform duration-500"
-              priority={recipe.id === 1} // Додаємо пріоритет для першої картинки (опціонально)
+              priority={recipe.id === 1}
             />
           </div>
           <div className="bg-[#86E377] px-4 py-2 flex items-center gap-2 mt-[-20px] relative z-10 w-fit ml-6 shadow-md rounded-md">
             <span className="text-sm font-black uppercase tracking-tighter text-black">
-              {recipe.category.name}
+              {recipe.category?.name}
             </span>
           </div>
         </div>
@@ -33,7 +33,7 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
           <div className="space-y-4">
             <div className="flex gap-2">
               <span className="bg-[#D1F1CD] text-[#2D5A27] text-[10px] font-bold px-3 py-1 rounded-md uppercase">
-                {recipe.category.name}-рецепти
+                {recipe.category?.name}-рецепти
               </span>
               <span className="bg-[#F3F1E9] text-gray-700 text-[10px] font-bold px-3 py-1 rounded-md border border-gray-200">
                 {recipe.difficulty || 'Середній!'}
@@ -48,7 +48,7 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
           <div className="flex flex-col gap-3 pt-4 border-t border-gray-100">
             <div className="flex items-center justify-between">
               <div className="w-fit bg-[#F3F1E9] px-3 py-1.5 rounded-md text-[11px] font-bold text-gray-700 border border-gray-200">
-                {recipe.author.name}
+                {recipe.author?.name || "Анонім"}
               </div>
             </div>
 
