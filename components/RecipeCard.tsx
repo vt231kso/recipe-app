@@ -10,7 +10,7 @@ interface RecipeCardProps {
 export default function RecipeCard({ recipe }: RecipeCardProps) {
   return (
     <div className="group flex flex-col bg-white rounded-3xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300">
-      <Link href={`/recipe/${recipe.id}`} className="block">
+      <Link href={`/recipes/${recipe.id}`} className="block">
 
         <div className="relative">
           <div className="relative h-[280px] w-full rounded-t-3xl overflow-hidden">

@@ -1,6 +1,7 @@
 // types/recipe.ts
 import { Prisma } from "@prisma/client";
-
+import {
+  Category, Cuisine, DietaryNeed, Ingredient } from "@prisma/client";
 export type RecipePreview = Prisma.RecipeGetPayload<{
   select: {
     id: true;
@@ -29,3 +30,15 @@ export type RecipeWithDetails = Prisma.RecipeGetPayload<{
     ingredients: { include: { ingredient: true } };
   };
 }>;
+export type FilterOptions = {
+  categories: Category[];
+  cuisines: Cuisine[];
+  dietaryNeeds: DietaryNeed[];
+  ingredients: Ingredient[];
+};
+
+// Тип для окремого селекту
+export type SelectOption = {
+  label: string;
+  value: string;
+};
