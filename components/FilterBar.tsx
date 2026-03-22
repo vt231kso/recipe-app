@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect, ReactElement } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FilterOptions, SelectOption } from "@/types/recipe";
+import { useTransition } from "react";
 
 interface FilterBarProps {
   options: FilterOptions;
@@ -10,6 +11,7 @@ interface FilterBarProps {
 export default function FilterBar({ options }: FilterBarProps): ReactElement {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [isPending, startTransition] = useTransition();
 
   const hasFilters = searchParams.toString().length > 0;
   const updateFilter = (key: string, values: string[]): void => {
@@ -20,10 +22,15 @@ export default function FilterBar({ options }: FilterBarProps): ReactElement {
       params.delete(key);
     }
 
-    router.push(`/recipes?${params.toString()}`, { scroll: false });
+    startTransition(() => {
+      router.push(`/recipes?${params.toString()}`, { scroll: false });
+    });
   };
+
   const resetFilters = (): void => {
-    router.push("/recipes", { scroll: false });
+    startTransition(() => {
+      router.push("/recipes", { scroll: false });
+    });
   };
   const timeOptions = [
     { label: "До 15 хв", value: "15" },
@@ -32,7 +39,7 @@ export default function FilterBar({ options }: FilterBarProps): ReactElement {
     { label: "До 2 год", value: "120" },
   ];
   return (
-    <div className="flex flex-wrap gap-4 py-8 border-b border-gray-100">
+    <div className={`flex flex-wrap gap-4 py-8 border-b border-gray-100 transition-opacity duration-300 ${isPending ? "opacity-50 pointer-events-none" : "opacity-100"}`}>
       <MultiSelect
         label="Тип страви"
         selected={searchParams.get("category")?.split(",") || []}
@@ -69,7 +76,10 @@ export default function FilterBar({ options }: FilterBarProps): ReactElement {
           updateFilter("time", lastSelected);
         }}
       />
-      {hasFilters && (
+      {isPending && (
+        <span className="text-xs text-gray-400 animate-pulse self-center">Оновлюємо...</span>
+      )}
+      {hasFilters && !isPending && (
         <button
           onClick={resetFilters}
           className="text-xs font-bold text-red-400 hover:text-red-600 transition-colors ml-2 uppercase tracking-widest"

@@ -34,10 +34,10 @@ export default function HeaderTop() {
 
 
   return (
-    <div className="border-b bg-red py-3">
-      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+    <div className="border-b bg-white py-2 md:py-3">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 flex items-center justify-between gap-4">
 
-        <div className="relative w-1/3">
+        <div className="relative  flex-1 md:w-1/3">
           <input
             type="text"
             value={query}
@@ -49,20 +49,20 @@ export default function HeaderTop() {
         </div>
 
 
-        <div className="flex items-center gap-6">
-          <div className="flex gap-3 text-gray-600 border-r pr-6">
+        <div className="flex items-center gap-2 md:gap-6">
+          <div className="hidden md:flex flex gap-3 text-gray-600 border-r pr-6">
             <Facebook className="w-5 h-5 cursor-pointer hover:text-blue-600" />
             <Send className="w-5 h-5 cursor-pointer hover:text-blue-400" />
             <Instagram className="w-5 h-5 cursor-pointer hover:text-pink-600" />
           </div>
-          <div className="flex items-center gap-4 text-gray-700 font-medium">
+          <div className="flex items-center  gap-3 md:gap-4  text-gray-700 font-medium">
             <div className="relative">
-              <Bell className="w-6 h-6" />
-              <span className="absolute -top-1 -right-1 bg-[#F2E880] text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">1</span>
+              <Bell className="w-5 h-5 md:w-6 md:h-6 text-gray-600" />
+              <span className="absolute -top-1 -right-1 bg-[#F2E880] text-[10px] w-3.5 h-3.5 rounded-full flex items-center justify-center font-bold">1</span>
             </div>
-            <button className="flex items-center gap-2 border rounded-xl px-4 py-2 hover:bg-gray-50 transition-colors">
+            <button className="flex items-center gap-2 border rounded-xl p-2 md:px-4 md:py-2 hover:bg-gray-50 transition-colors">
               <User className="w-5 h-5" />
-              <span>Кабінет</span>
+              <span className="hidden md:inline text-sm">Кабінет</span>
             </button>
           </div>
         </div>
