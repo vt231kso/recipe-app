@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache"
 import {RecipePreview, RecipeWithDetails,FilterOptions} from "@/types/recipe";
 
 export interface FilterParams {
+  query?: string;
   category?: string;
   cuisine?: string;
   dietary?: string;
@@ -105,6 +106,10 @@ console.log(params);
 
   const recipes = await prisma.recipe.findMany({
     where: {
+      OR: params.query ? [
+        { title: { contains: params.query, mode: 'insensitive' } },
+        { description: { contains: params.query, mode: 'insensitive' } }
+      ] : undefined,
       category: params.category ? {
         slug: { in: parseSlugs(params.category) }
       } : undefined,

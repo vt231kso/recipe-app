@@ -65,7 +65,6 @@ export default function FilterBar({ options }: FilterBarProps): ReactElement {
         selected={searchParams.get("time") ? [searchParams.get("time")!] : []}
         options={timeOptions}
         onChange={(v) => {
-          // Ми беремо тільки останнє вибране значення, щоб не було "до 15 і до 60" одночасно
           const lastSelected = v.length > 0 ? [v[v.length - 1]] : [];
           updateFilter("time", lastSelected);
         }}

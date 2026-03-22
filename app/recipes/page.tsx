@@ -5,6 +5,7 @@ import { ReactElement } from "react";
 
 interface RecipesPageProps {
   searchParams: Promise<{
+    query?: string;
     category?: string;
     cuisine?: string;
     dietary?: string;

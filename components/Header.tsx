@@ -1,6 +1,38 @@
+"use client";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Search, Facebook, Send, Instagram, Bell, User } from 'lucide-react'; // Встанови: npm install lucide-react
 
 export default function HeaderTop() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const [query, setQuery] = useState(searchParams.get("query") || "");
+  useEffect(() => {
+    const urlQuery = searchParams.get("query") || "";
+    if (urlQuery !== query) {
+      const handler = setTimeout(() => setQuery(urlQuery), 0);
+      return () => clearTimeout(handler);
+    }
+  }, [searchParams]);
+  useEffect(() => {
+    const urlQuery = searchParams.get("query") || "";
+    if (query === urlQuery) return;
+
+    const delayDebounceFn = setTimeout(() => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (query) {
+        params.set("query", query);
+      } else {
+        params.delete("query");
+      }
+      router.push(`/recipes?${params.toString()}`, { scroll: false });
+    }, 500);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [query, router, searchParams]);
+
+
   return (
     <div className="border-b bg-red py-3">
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
@@ -8,8 +40,10 @@ export default function HeaderTop() {
         <div className="relative w-1/3">
           <input
             type="text"
-            placeholder="паста"
-            className="w-full bg-gray-50 border border-gray-200 rounded-lg py-2 pl-4 pr-10 text-sm outline-none focus:border-[#F2E880]"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Пошук рецептів..."
+            className="w-full bg-gray-50 border border-gray-200 rounded-lg py-2 pl-4 pr-10 text-sm outline-none focus:border-[#86E377] transition-all"
           />
           <Search className="absolute right-3 top-2.5 w-4 h-4 text-gray-400" />
         </div>
