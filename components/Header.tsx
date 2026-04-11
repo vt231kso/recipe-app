@@ -1,38 +1,10 @@
 "use client";
-import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Search, Facebook, Send, Instagram, Bell, User } from 'lucide-react'; // Встанови: npm install lucide-react
+
+import { Search, Facebook, Send, Instagram, Bell, User } from 'lucide-react';
+import { useSearch } from "@/hooks/useSearch";
 
 export default function HeaderTop() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
-  const [query, setQuery] = useState(searchParams.get("query") || "");
-  useEffect(() => {
-    const urlQuery = searchParams.get("query") || "";
-    if (urlQuery !== query) {
-      const handler = setTimeout(() => setQuery(urlQuery), 0);
-      return () => clearTimeout(handler);
-    }
-  }, [searchParams]);
-  useEffect(() => {
-    const urlQuery = searchParams.get("query") || "";
-    if (query === urlQuery) return;
-
-    const delayDebounceFn = setTimeout(() => {
-      const params = new URLSearchParams(searchParams.toString());
-      if (query) {
-        params.set("query", query);
-      } else {
-        params.delete("query");
-      }
-      router.push(`/recipes?${params.toString()}`, { scroll: false });
-    }, 500);
-
-    return () => clearTimeout(delayDebounceFn);
-  }, [query, router, searchParams]);
-
-
+  const { query, setQuery } = useSearch();
   return (
     <div className="border-b bg-white py-2 md:py-3">
       <div className="max-w-7xl mx-auto px-4 md:px-6 flex items-center justify-between gap-4">
