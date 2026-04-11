@@ -1,12 +1,13 @@
-import HeaderTop from "@/components/Header";
+import HeaderTop from "@/components/HeaderTop";
 import Navbar from "@/components/Navbar";
 import "./globals.css";
 import {Suspense} from "react";
-
+import Providers from "@/components/Providers";
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="uk">
     <body className="bg-[#FCFBF7] text-gray-900 antialiased">
+    <Providers>
     <header className="sticky top-0 z-50 shadow-sm bg-white">
       <Suspense fallback={<div className="h-[60px] bg-white animate-pulse" />}>
       <HeaderTop />
@@ -14,9 +15,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <Navbar />
     </header>
 
-    <div className="min-h-screen">
+    <main className="min-h-screen">
       {children}
-    </div>
+    </main>
+    </Providers>
     </body>
     </html>
   );
