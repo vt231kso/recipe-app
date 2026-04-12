@@ -1,7 +1,6 @@
 "use server"
 
 import { prisma } from "@/lib/prisma"
-import { revalidatePath } from "next/cache"
 import {RecipePreview, RecipeWithDetails,FilterOptions} from "@/types/recipe";
 
 export interface FilterParams {
@@ -12,56 +11,44 @@ export interface FilterParams {
   time?: string;
   ingredient?: string;
 }
+const recipePreviewInclude = {
+  category: { select: { name: true } },
+  author: { select: { name: true } },
+  likes: true,
+  _count: { select: { likes: true } }
+} as const;
+
 export async function fetchRecipes(): Promise<RecipePreview[]> {
-  return await prisma.recipe.findMany({
-    select: {
-      id: true,
-      title: true,
-      imageUrl: true,
-      difficulty: true,
-      cookingTime: true,
-      category: { select: { name: true } },
-      author: { select: { name: true } },
-    },
+  const recipes = await prisma.recipe.findMany({
+    include: recipePreviewInclude,
     orderBy: { createdAt: 'desc' }
   });
+
+  return recipes as RecipePreview[];
 }
 
 export async function fetchRecipeById(id: number):Promise<RecipeWithDetails | null> {
 
   if (!id || isNaN(id)) return null;
 
-  try {
-    const recipe = await prisma.recipe.findUnique({
-      where: { id },
-      include: {
-        category: true,
-        cuisine: true,
-        author: true,
-        ingredients: {
-          include: {
-            ingredient: true,
-          },
-        },
-        steps: {
-          orderBy: {
-            order: 'asc',
-          },
-        },
-        dietaryNeeds: true,
-      },
-    });
+  const recipe = await prisma.recipe.findUnique({
+    where: { id },
+    include: {
+      category: true,
+      author: true,
+      steps: { orderBy: { order: 'asc' } },
+      ingredients: { include: { ingredient: true } },
+      likes: true,
+      _count: { select: { likes: true } }
+    }
+  });
 
-    return recipe as RecipeWithDetails | null;
-  } catch (error) {
-    console.error("Помилка Prisma:", error);
-    return null;
-  }
+  return recipe as RecipeWithDetails | null;
 }
 
-export async function fetchRelatedRecipes(categoryId: number, currentRecipeId: number):Promise<RecipePreview[]> {
+export async function fetchRelatedRecipes(categoryId: number, currentRecipeId: number): Promise<RecipePreview[]> {
   try {
-    return await prisma.recipe.findMany({
+    const recipes = await prisma.recipe.findMany({
       where: {
         categoryId: categoryId,
         NOT: {
@@ -69,22 +56,15 @@ export async function fetchRelatedRecipes(categoryId: number, currentRecipeId: n
         },
       },
       take: 3,
-      select: {
-        id: true,
-        title: true,
-        imageUrl: true,
-        difficulty: true,
-        cookingTime: true,
-        category: { select: { name: true } },
-        author: { select: { name: true } },
-      },
+      include: recipePreviewInclude,
     });
+
+    return recipes as RecipePreview[];
   } catch (error) {
     console.error("Помилка при отриманні схожих рецептів:", error);
     return [];
   }
 }
-
 export async function fetchFilterOptions(): Promise<FilterOptions> {
   const [categories, cuisines, dietaryNeeds, ingredients] = await Promise.all([
     prisma.category.findMany(),
@@ -128,15 +108,7 @@ console.log(params);
 
       cookingTime: params.time ? { lte: parseInt(params.time) } : undefined,
     },
-    select: {
-      id: true,
-      title: true,
-      imageUrl: true,
-      difficulty: true,
-      cookingTime: true,
-      category: { select: { name: true } },
-      author: { select: { name: true } },
-    },
+    include: recipePreviewInclude,
     orderBy: { createdAt: 'desc' }
   });
 

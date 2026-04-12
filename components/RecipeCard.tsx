@@ -2,14 +2,28 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { RecipePreview, RecipeWithDetails } from '@/types/recipe';
+import LikeButton from '@/components/LikeButton';
+import { auth } from "@/auth";
 
 interface RecipeCardProps {
   recipe: RecipePreview | RecipeWithDetails;
 }
 
-export default function RecipeCard({ recipe }: RecipeCardProps) {
+export default async function RecipeCard({ recipe }: RecipeCardProps) {
+  const session = await auth();
+
+  const isLiked = recipe.likes?.some(like => like.userId === Number(session?.user?.id)) || false;
+  const likesCount = recipe._count?.likes || 0;
   return (
-    <div className="group flex flex-col bg-white rounded-3xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300">
+    <div className="group relative flex flex-col bg-white rounded-3xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300">
+      <div className="absolute top-4 right-4 z-20 bg-white/80 backdrop-blur-sm p-1.5 rounded-full shadow-sm">
+        <LikeButton
+          recipeId={recipe.id}
+          initialIsLiked={isLiked}
+          likesCount={likesCount}
+        />
+      </div>
+
       <Link href={`/recipes/${recipe.id}`} className="block">
 
         <div className="relative">

@@ -19,6 +19,8 @@ export type RecipePreview = Prisma.RecipeGetPayload<{
         name: true;
       };
     };
+    likes: true,
+    _count: { select: { likes: true } }
   };
 }>;
 
@@ -28,6 +30,8 @@ export type RecipeWithDetails = Prisma.RecipeGetPayload<{
     author: true;
     steps: true;
     ingredients: { include: { ingredient: true } };
+    likes: true; // Теж додаємо сюди
+    _count: { select: { likes: true } };
   };
 }>;
 export type FilterOptions = {

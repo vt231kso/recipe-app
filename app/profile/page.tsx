@@ -1,4 +1,3 @@
-// app/profile/page.tsx
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 
