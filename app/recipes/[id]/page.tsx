@@ -5,29 +5,37 @@ import RecipeCard from '@/components/RecipeCard';
 
 import LikeButton from '@/components/LikeButton';
 import { auth } from "@/auth";
+import SaveButton from '@/components/SaveButton';
 
 export default async function RecipePage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
   const recipeId = parseInt(resolvedParams.id);
 
   const session = await auth();
+  const userId = Number(session?.user?.id);
 
   const recipe = await fetchRecipeById(recipeId);
 
   if (!recipe) {
     notFound();
   }
-  const isLiked = recipe.likes?.some(like => like.userId === Number(session?.user?.id)) || false;
+  const isLiked = recipe.likes?.some(like => like.userId === userId) || false;
   const likesCount = recipe._count?.likes || 0;
+  const isSaved = recipe.savedBy?.some(save => save.userId === userId) || false;
   const relatedRecipes = (await fetchRelatedRecipes(recipe.category.id, recipe.id));
   return (
     <main className="bg-[#FDFCF9] min-h-screen pb-24 overflow-x-hidden">
       <div className="max-w-4xl mx-auto px-6 pt-10 md:pt-16 pb-8 md:pb-12 text-cente">
-        <div className="flex justify-center mb-6">
+        <div className="flex justify-center items-center gap-4 mb-6">
           <LikeButton
             recipeId={recipeId}
             initialIsLiked={isLiked}
             likesCount={likesCount}
+          />
+          <div className="w-px h-8 bg-gray-200" />
+          <SaveButton
+            recipeId={recipeId}
+            initialIsSaved={isSaved}
           />
         </div>
         <span className="bg-[#86E377] px-4 py-1.5 rounded-lg text-xs font-black uppercase tracking-widest text-black inline-block mb-6 md:mb-8 ">

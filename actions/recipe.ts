@@ -15,7 +15,8 @@ const recipePreviewInclude = {
   category: { select: { name: true } },
   author: { select: { name: true } },
   likes: true,
-  _count: { select: { likes: true } }
+  savedBy: true,
+  _count: { select: { likes: true,savedBy: true } }
 } as const;
 
 export async function fetchRecipes(): Promise<RecipePreview[]> {
@@ -39,7 +40,8 @@ export async function fetchRecipeById(id: number):Promise<RecipeWithDetails | nu
       steps: { orderBy: { order: 'asc' } },
       ingredients: { include: { ingredient: true } },
       likes: true,
-      _count: { select: { likes: true } }
+      savedBy: true,
+      _count: { select: { likes: true,savedBy:true } }
     }
   });
 
@@ -107,6 +109,22 @@ console.log(params);
       } : undefined,
 
       cookingTime: params.time ? { lte: parseInt(params.time) } : undefined,
+    },
+    include: recipePreviewInclude,
+    orderBy: { createdAt: 'desc' }
+  });
+
+  return recipes as RecipePreview[];
+}
+
+export async function fetchSavedRecipes(userId: number): Promise<RecipePreview[]> {
+  const recipes = await prisma.recipe.findMany({
+    where: {
+      savedBy: {
+        some: {
+          userId: userId
+        }
+      }
     },
     include: recipePreviewInclude,
     orderBy: { createdAt: 'desc' }
