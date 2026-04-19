@@ -33,7 +33,17 @@ export type RecipeWithDetails = Prisma.RecipeGetPayload<{
     ingredients: { include: { ingredient: true } };
     likes: true;
     savedBy: true,
-    _count: { select: { likes: true, savedBy: true } }
+    comments: {
+      include: {
+        user: { select: { name: true } },
+        replies: {
+          include: {
+            user: { select: { name: true } }
+          }
+        }
+      }
+    },
+    _count: { select: { likes: true, savedBy: true,comments:true } }
   };
 }>;
 export type FilterOptions = {

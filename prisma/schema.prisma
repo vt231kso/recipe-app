@@ -100,13 +100,16 @@ model RecipeIngredient {
 }
 
 model Comment {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   text      String
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
-  recipe    Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipe    Recipe    @relation(fields: [recipeId], references: [id], onDelete: Cascade)
   recipeId  Int
+  parentId  Int?
+  parent    Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   Comment[] @relation("CommentReplies")
 }
 
 model Like {

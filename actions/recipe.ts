@@ -37,11 +37,24 @@ export async function fetchRecipeById(id: number):Promise<RecipeWithDetails | nu
     include: {
       category: true,
       author: true,
-      steps: { orderBy: { order: 'asc' } },
-      ingredients: { include: { ingredient: true } },
+      steps: {orderBy: {order: 'asc'}},
+      ingredients: {include: {ingredient: true}},
       likes: true,
       savedBy: true,
-      _count: { select: { likes: true,savedBy:true } }
+      comments: {
+        where: {parentId: null},
+        include: {
+          user: {select: {name: true}},
+          replies: {
+            include: {
+              user: {select: {name: true}}
+            },
+            orderBy: {createdAt: 'asc'}
+          }
+        },
+        orderBy: {createdAt: 'desc'}
+      },
+      _count: {select: {likes: true, savedBy: true, comments: true}}
     }
   });
 
