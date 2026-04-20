@@ -24,6 +24,7 @@ model User {
   saved    SavedRecipe[]
 
   createdAt DateTime @default(now())
+  rating    Rating[]
 }
 
 model Recipe {
@@ -51,6 +52,7 @@ model Recipe {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  rating    Rating[]
 }
 
 model Step {
@@ -128,4 +130,19 @@ model SavedRecipe {
   recipeId Int
 
   @@id([userId, recipeId])
+}
+
+model Rating {
+  id        Int      @id @default(autoincrement())
+  value     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
+
+  recipe   Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  recipeId Int
+
+  @@unique([userId, recipeId])
 }

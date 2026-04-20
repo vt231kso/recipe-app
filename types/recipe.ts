@@ -25,7 +25,7 @@ export type RecipePreview = Prisma.RecipeGetPayload<{
   };
 }>;
 
-export type RecipeWithDetails = Prisma.RecipeGetPayload<{
+export type PrismaRecipeWithDetails = Prisma.RecipeGetPayload<{
   include: {
     category: true;
     author: true;
@@ -33,6 +33,7 @@ export type RecipeWithDetails = Prisma.RecipeGetPayload<{
     ingredients: { include: { ingredient: true } };
     likes: true;
     savedBy: true,
+    rating: true,
     comments: {
       include: {
         user: { select: { name: true } },
@@ -43,9 +44,14 @@ export type RecipeWithDetails = Prisma.RecipeGetPayload<{
         }
       }
     },
-    _count: { select: { likes: true, savedBy: true,comments:true } }
+    _count: { select: { likes: true, savedBy: true,comments:true,rating: true } }
   };
 }>;
+export type RecipeWithDetails = PrismaRecipeWithDetails & {
+  avgRating: string;
+  userRating: number;
+  totalRatings: number;
+};
 export type FilterOptions = {
   categories: Category[];
   cuisines: Cuisine[];

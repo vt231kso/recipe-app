@@ -28,7 +28,7 @@ export async function fetchRecipes(): Promise<RecipePreview[]> {
   return recipes as RecipePreview[];
 }
 
-export async function fetchRecipeById(id: number):Promise<RecipeWithDetails | null> {
+export async function fetchRecipeById(id: number,userId?:number):Promise<RecipeWithDetails | null> {
 
   if (!id || isNaN(id)) return null;
 
@@ -41,6 +41,7 @@ export async function fetchRecipeById(id: number):Promise<RecipeWithDetails | nu
       ingredients: {include: {ingredient: true}},
       likes: true,
       savedBy: true,
+      rating: true,
       comments: {
         where: {parentId: null},
         include: {
@@ -54,11 +55,27 @@ export async function fetchRecipeById(id: number):Promise<RecipeWithDetails | nu
         },
         orderBy: {createdAt: 'desc'}
       },
-      _count: {select: {likes: true, savedBy: true, comments: true}}
+      _count: {select: {likes: true, savedBy: true, comments: true, rating: true}}
     }
   });
 
-  return recipe as RecipeWithDetails | null;
+  if (!recipe) return null;
+
+  const totalRatings = recipe._count.rating;
+  const avgRating = totalRatings > 0
+    ? (recipe.rating.reduce((acc, r) => acc + r.value, 0) / totalRatings).toFixed(1)
+    : "0.0";
+
+  const userRating = userId
+    ? recipe.rating.find(r => r.userId === userId)?.value || 0
+    : 0;
+
+  return {
+    ...recipe,
+    avgRating,
+    userRating,
+    totalRatings
+  } as RecipeWithDetails;
 }
 
 export async function fetchRelatedRecipes(categoryId: number, currentRecipeId: number): Promise<RecipePreview[]> {
