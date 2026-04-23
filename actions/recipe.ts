@@ -42,6 +42,7 @@ export async function fetchRecipeById(id: number,userId?:number):Promise<RecipeW
       likes: true,
       savedBy: true,
       rating: true,
+      dietaryNeeds: true,
       comments: {
         where: {parentId: null},
         include: {
@@ -102,7 +103,7 @@ export async function fetchFilterOptions(): Promise<FilterOptions> {
     prisma.category.findMany(),
     prisma.cuisine.findMany(),
     prisma.dietaryNeed.findMany(),
-    prisma.ingredient.findMany({ take: 50 }),
+    prisma.ingredient.findMany({ take: 10 }),
   ]);
 
   return { categories, cuisines, dietaryNeeds, ingredients };
@@ -162,7 +163,11 @@ export async function fetchSavedRecipes(userId: number): Promise<RecipePreview[]
 
   return recipes as RecipePreview[];
 }
-export async function createRecipe(formData: FormData) {
-  // Тут буде логіка збереження
-  // revalidatePath('/') -- оновлює головну сторінку після додавання
+
+export async function getRecipeMetadata() {
+  return await Promise.all([
+    prisma.category.findMany({ orderBy: { name: 'asc' } }),
+    prisma.cuisine.findMany({ orderBy: { name: 'asc' } }),
+    prisma.dietaryNeed.findMany({ orderBy: { name: 'asc' } })
+  ]);
 }

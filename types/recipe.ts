@@ -1,4 +1,3 @@
-// types/recipe.ts
 import { Prisma } from "@prisma/client";
 import {
   Category, Cuisine, DietaryNeed, Ingredient } from "@prisma/client";
@@ -34,6 +33,7 @@ export type PrismaRecipeWithDetails = Prisma.RecipeGetPayload<{
     likes: true;
     savedBy: true,
     rating: true,
+    dietaryNeeds: true,
     comments: {
       include: {
         user: { select: { name: true } },
@@ -59,7 +59,6 @@ export type FilterOptions = {
   ingredients: Ingredient[];
 };
 
-// Тип для окремого селекту
 export type SelectOption = {
   label: string;
   value: string;

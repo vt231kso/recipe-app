@@ -53,6 +53,18 @@ export default async function RecipePage({params}: { params: Promise<{ id: strin
         <h1 className="text-3xl md:text-6xl font-serif leading-tight text-gray-950 mb-6 md:mb-8 px-2">
           {recipe.title}
         </h1>
+        {recipe.dietaryNeeds && recipe.dietaryNeeds.length > 0 && (
+          <div className="flex flex-wrap justify-center gap-2 mb-8">
+            {recipe.dietaryNeeds.map((diet) => (
+              <span
+                key={diet.id}
+                className="px-4 py-1.5 bg-green-50 text-green-700 text-xs font-bold uppercase tracking-widest rounded-full border border-green-100"
+              >
+        {diet.name}
+      </span>
+            ))}
+          </div>
+        )}
         <div className="flex flex-col items-center gap-2 mb-8">
           <p className="text-xs uppercase tracking-widest text-gray-400 font-bold">Оцініть рецепт</p>
           <StarRating recipeId={recipeId} initialRating={recipe.userRating} />

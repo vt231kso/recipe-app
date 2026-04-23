@@ -33,8 +33,13 @@ export default function Navbar() {
 
         <div className="flex items-center">
           <button className="bg-[#F2E880] hover:bg-[#E6DB65] font-bold py-2 px-4 md:py-3 md:px-6 rounded-xl flex items-center gap-2 transition-colors">
-            <Plus className="w-6 h-6" />
-            <span className="hidden md:inline">Поділись рецептом</span>
+            <Link
+              href="/recipes/create"
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            >
+              <Plus className="w-6 h-6" />
+            </Link>
+            <Link href="/recipes/create" className="hidden md:inline">Поділись рецептом</Link>
           </button>
         </div>
       </div>
