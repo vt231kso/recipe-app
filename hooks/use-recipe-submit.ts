@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createRecipe } from "@/actions/create-recipe";
+import { updateRecipe } from "@/actions/update-recipe";
 import { RecipeFormValues } from "@/lib/validations/recipe";
 
-export function useRecipeSubmit() {
+export function useRecipeSubmit(recipeId?: number, initialImageUrl?: string | null) {
   const router = useRouter();
   const [isPending, setIsPending] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
@@ -27,13 +28,24 @@ export function useRecipeSubmit() {
           formData.append(key, String(value));
         }
       });
-
-      const result = await createRecipe(formData);
+      if (recipeId) {
+        formData.append("id", recipeId.toString());
+        if (initialImageUrl) {
+          formData.append("currentImageUrl", initialImageUrl);
+        }
+      }
+      if (recipeId) {
+        formData.append("id", recipeId.toString());
+      }
+      const result = recipeId
+        ? await updateRecipe(formData)
+        : await createRecipe(formData);
 
       if (result?.error) {
         setServerError(result.error);
       } else if (result?.success) {
         router.push(`/recipes/${result.recipeId}`);
+        router.refresh();
       }
     } catch (e) {
       setServerError("Щось пішло не так при збереженні");

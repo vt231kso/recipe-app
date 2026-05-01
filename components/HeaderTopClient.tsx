@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, Facebook, Send, Instagram, Bell, User, LogOut } from 'lucide-react';
+import {Search, Facebook, Send, Instagram, Bell, User, LogOut, ShieldCheck} from 'lucide-react';
 import { useSearch } from "@/hooks/useSearch";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
@@ -44,6 +44,15 @@ export default function HeaderTopClient({ session }: Props) {
 
             {session ? (
               <div className="flex items-center gap-2">
+                {session.user.role === "ADMIN" && (
+                  <Link
+                    href="/admin"
+                    className="flex items-center gap-2 bg-green-50 text-green-700 border border-green-100 rounded-xl px-3 py-2 hover:bg-green-100 transition-colors"
+                  >
+                    <ShieldCheck className="w-5 h-5" />
+                    <span className="hidden lg:inline text-sm font-bold">Адмін</span>
+                  </Link>
+                )}
                 <Link
                   href="/profile"
                   className="flex items-center gap-2 border rounded-xl p-2 md:px-4 md:py-2 hover:bg-gray-50 transition-colors"

@@ -63,3 +63,13 @@ export type SelectOption = {
   label: string;
   value: string;
 };
+
+export interface IngredientInput {
+  name: string;
+  amount: string;
+  unit: string;
+}
+
+export interface StepInput {
+  content: string;
+}

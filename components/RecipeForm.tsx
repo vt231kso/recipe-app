@@ -14,20 +14,55 @@ import { DietarySelection } from "@/components/recipe/create/DietarySelection";
 import { IngredientsSection } from "@/components/recipe/create/IngredientsSection";
 import { StepsSection } from "@/components/recipe/create/StepsSection";
 
-interface Props {
-  categories: { id: number; name: string }[];
-  cuisines: { id: number; name: string }[];
-  dietaryNeeds: { id: number; name: string }[];
+interface DirectoryItem {
+  id: number;
+  name: string;
 }
 
-export default function RecipeForm({ categories, cuisines, dietaryNeeds }: Props) {
+interface RecipeInitialData {
+  id: number;
+  title: string;
+  description: string | null;
+  cookingTime: number;
+  difficulty: string;
+  categoryId: number;
+  cuisineId: number;
+  imageUrl: string | null;
+  dietaryNeeds: DirectoryItem[];
+  ingredients: { amount: string; unit: string; ingredient: { name: string } }[];
+  steps: { content: string }[];
+}
+
+interface Props {
+  categories: DirectoryItem[];
+  cuisines: DirectoryItem[];
+  dietaryNeeds: DirectoryItem[];
+  initialData?: RecipeInitialData;
+  isEdit?: boolean;
+}
+
+export default function RecipeForm({ categories, cuisines, dietaryNeeds, initialData, isEdit = false }: Props) {
   const methods = useForm({
     resolver: zodResolver(recipeSchema),
-    defaultValues: {
+    defaultValues: initialData ? {
+      title: initialData.title,
+      description: initialData.description || "",
+      cookingTime: Number(initialData.cookingTime),
+      difficulty: initialData.difficulty as "Easy" | "Medium" | "Hard",
+      categoryId: Number(initialData.categoryId),
+      cuisineId: Number(initialData.cuisineId),
+      dietaryIds: initialData.dietaryNeeds.map(d => Number(d.id)),
+      ingredients: initialData.ingredients.map(i => ({
+        name: i.ingredient.name,
+        amount: i.amount,
+        unit: i.unit
+      })),
+      steps: initialData.steps.map(s => ({ content: s.content })),
+    } : {
       title: "",
       description: "",
       cookingTime: 30,
-      difficulty: "Medium",
+      difficulty: "Medium" as const,
       categoryId: 0,
       cuisineId: 0,
       dietaryIds: [],
@@ -36,8 +71,12 @@ export default function RecipeForm({ categories, cuisines, dietaryNeeds }: Props
     },
   });
 
-  const { imagePreview, imageError, handleImageChange, clearImage } = useRecipeImage(methods.setValue);
-  const { onSubmit, isPending, serverError } = useRecipeSubmit();
+  const { imagePreview, imageError, handleImageChange, clearImage } = useRecipeImage(
+    methods.setValue,
+    initialData?.imageUrl || undefined
+  );
+
+  const { onSubmit, isPending, serverError } = useRecipeSubmit(initialData?.id,initialData?.imageUrl);
 
   const displayError = imageError || serverError;
 
@@ -45,8 +84,12 @@ export default function RecipeForm({ categories, cuisines, dietaryNeeds }: Props
     <FormProvider {...methods}>
       <form onSubmit={methods.handleSubmit(onSubmit)} className="max-w-4xl mx-auto space-y-8 pb-20 px-4">
         <header className="text-center py-10 space-y-2">
-          <h1 className="text-4xl font-serif font-bold text-gray-900 tracking-tight">Створити рецепт</h1>
-          <p className="text-gray-500 text-lg">Поділіться своїм кулінарним шедевром</p>
+          <h1 className="text-4xl font-serif font-bold text-gray-900 tracking-tight">
+            {isEdit ? "Редагувати рецепт" : "Створити рецепт"}
+          </h1>
+          <p className="text-gray-500 text-lg">
+            {isEdit ? "Внесіть необхідні зміни у ваш рецепт" : "Поділіться своїм кулінарним шедевром"}
+          </p>
         </header>
 
         {displayError && (
@@ -61,7 +104,9 @@ export default function RecipeForm({ categories, cuisines, dietaryNeeds }: Props
           onImageChange={handleImageChange}
           onClear={clearImage}
         />
-
+        {isEdit && initialData?.imageUrl && (
+          <input type="hidden" name="currentImageUrl" value={initialData.imageUrl} />
+        )}
         <BasicInfoSection categories={categories} cuisines={cuisines} />
         <DietarySelection items={dietaryNeeds} />
         <IngredientsSection />
@@ -78,7 +123,7 @@ export default function RecipeForm({ categories, cuisines, dietaryNeeds }: Props
               <span>Збереження...</span>
             </>
           ) : (
-            "Опублікувати рецепт"
+            isEdit ? "Зберегти зміни" : "Опублікувати рецепт"
           )}
         </button>
       </form>

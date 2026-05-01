@@ -4,9 +4,10 @@ import { useState } from "react";
 import { UseFormSetValue, FieldValues, Path, PathValue } from "react-hook-form";
 
 export function useRecipeImage<T extends FieldValues>(
-  setValue: UseFormSetValue<T>
+  setValue: UseFormSetValue<T>,
+  initialValue?: string
 ) {
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(initialValue || null);
   const [imageError, setImageError] = useState<string | null>(null);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
