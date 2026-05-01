@@ -171,3 +171,21 @@ export async function getRecipeMetadata() {
     prisma.dietaryNeed.findMany({ orderBy: { name: 'asc' } })
   ]);
 }
+
+
+export async function fetchUserRecipes(userId: number): Promise<RecipePreview[]> {
+  try {
+    const recipes = await prisma.recipe.findMany({
+      where: {
+        authorId: userId
+      },
+      include: recipePreviewInclude,
+      orderBy: { createdAt: 'desc' }
+    });
+
+    return recipes as RecipePreview[];
+  } catch (error) {
+    console.error("Помилка при отриманні власних рецептів:", error);
+    return [];
+  }
+}

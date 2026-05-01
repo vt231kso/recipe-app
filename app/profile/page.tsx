@@ -1,33 +1,79 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { fetchSavedRecipes } from "@/actions/recipe";
+import { getUser } from "@/actions/user";
 import RecipeCard from "@/components/RecipeCard";
+import EditProfileForm from "@/components/profile/EditProfileForm";
 import Link from "next/link";
+import { fetchUserRecipes } from "@/actions/recipe";
 
 export default async function ProfilePage() {
   const session = await auth();
-  if (!session) {
+
+  if (!session?.user) {
     redirect("/login");
   }
-  const userId = Number(session.user.id);
-  const savedRecipes = await fetchSavedRecipes(userId);
-  return (
-    <div className="p-8 max-w-6xl mx-auto space-y-12">
-      {/* Секція інформації про користувача */}
-      <section>
-        <h1 className="text-3xl font-serif mb-6 text-gray-900">Мій профіль</h1>
-        <div className="bg-white shadow-sm rounded-3xl p-8 border border-gray-100 flex flex-col gap-2">
-          <p className="text-gray-600"><strong>Ім&#39;я:</strong> {session.user?.name}</p>
-          <p className="text-gray-600"><strong>Email:</strong> {session.user?.email}</p>
-        </div>
-      </section>
 
-      <section>
-        <div className="flex items-center gap-4 mb-8">
-          <h2 className="text-4xl font-serif text-gray-900">Збережені рецепти</h2>
-          <span className="bg-gray-100 text-gray-500 px-3 py-1 rounded-full text-sm font-bold">
-            {savedRecipes.length}
+  const userId = Number(session.user.id);
+
+  const dbUser = await getUser(userId);
+
+  if (!dbUser) {
+    redirect("/login");
+  }
+  const savedRecipes = await fetchSavedRecipes(userId);
+  const myRecipes = await fetchUserRecipes(userId);
+  return (
+    <div className="p-8 max-w-6xl mx-auto space-y-12 min-h-screen bg-[#FDFCF9]">
+
+
+      <section className="space-y-6">
+        <header className="space-y-1">
+          <h1 className="text-4xl font-serif font-bold text-gray-900">Мій кабінет</h1>
+          <p className="text-gray-500">Керуйте своїми даними та переглядайте збережені рецепти</p>
+        </header>
+
+        <EditProfileForm user={dbUser} />
+      </section>
+      <section className="space-y-8">
+        <div className="flex items-center gap-4">
+          <h2 className="text-3xl font-serif text-gray-900">Мої рецепти</h2>
+          <span className="bg-[#86E377] text-black px-3 py-1 rounded-full text-sm font-bold">
+            {myRecipes.length}
           </span>
+        </div>
+
+        {myRecipes.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {myRecipes.map((recipe) => (
+              <RecipeCard key={recipe.id} recipe={recipe} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12 bg-white rounded-3xl border border-gray-100">
+            <p className="text-gray-400">Ви ще не опублікували жодного рецепта.</p>
+            <Link href="/recipes/create" className="text-[#86E377] font-bold hover:underline">
+              Створити перший рецепт
+            </Link>
+          </div>
+        )}
+      </section>
+      <hr className="border-gray-100" />
+
+      <section className="space-y-8">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <h2 className="text-3xl font-serif text-gray-900">Збережені рецепти</h2>
+            <span className="bg-[#86E377]/10 text-[#65B756] px-4 py-1 rounded-full text-sm font-bold border border-[#86E377]/20">
+              {savedRecipes.length}
+            </span>
+          </div>
+
+          {savedRecipes.length > 0 && (
+            <Link href="/" className="text-sm font-bold text-gray-400 hover:text-gray-600 transition-colors">
+              Шукати ще рецепти →
+            </Link>
+          )}
         </div>
 
         {savedRecipes.length > 0 ? (
@@ -37,14 +83,23 @@ export default async function ProfilePage() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-20 bg-gray-50 rounded-[40px] border-2 border-dashed border-gray-200">
-            <p className="text-gray-400 font-serif text-xl">Ви ще не зберегли жодного рецепта.</p>
-            <p className="text-[#86E377] font-bold mt-2 hover:underline cursor-pointer">
-              <Link href="/">Перейти до каталогу</Link>
-            </p>
+          <div className="text-center py-24 bg-white rounded-[40px] border-2 border-dashed border-gray-100 flex flex-col items-center">
+            <div className="bg-gray-50 p-4 rounded-full mb-4">
+              <svg className="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+            </div>
+            <p className="text-gray-400 font-serif text-xl">Ваша кулінарна книга поки порожня.</p>
+            <Link
+              href="/"
+              className="mt-4 px-8 py-3 bg-[#86E377] text-white rounded-2xl font-bold hover:bg-[#75d266] transition-all shadow-lg shadow-[#86E377]/20"
+            >
+              Знайти смачненьке
+            </Link>
           </div>
         )}
       </section>
+
     </div>
   );
 }
