@@ -15,15 +15,23 @@ async function checkAdmin() {
 }
 
 export async function deleteRecipeAction(id: number) {
-  await checkAdmin();
+  const session = await auth();
+  if (!session) return { error: "Неавторизовано" };
 
   try {
 
     const recipe = await prisma.recipe.findUnique({
       where: { id },
-      select: { imageUrl: true }
+      select: { imageUrl: true,authorId:true }
     });
+    if (!recipe) return { error: "Рецепт не знайдено" };
 
+    const isAdmin = session.user.role === "ADMIN";
+    const isAuthor = recipe.authorId.toString() === session.user.id;
+
+    if (!isAdmin && !isAuthor) {
+      return { error: "У вас немає прав на видалення цього рецепта" };
+    }
     if (recipe?.imageUrl && recipe.imageUrl.includes("vercel-storage.com")) {
       try {
         await del(recipe.imageUrl);
@@ -38,6 +46,8 @@ export async function deleteRecipeAction(id: number) {
 
     revalidatePath("/admin/recipes");
     revalidatePath("/recipes");
+    revalidatePath("/profile");
+    revalidatePath(`/recipes/${id}`);
     return { success: true };
   } catch (error) {
     console.error(error);
@@ -187,7 +197,6 @@ export async function createUserByAdmin(data: { name: string, email: string, pas
   }
 }
 import { Prisma } from "@prisma/client";
-import {redirect} from "next/navigation";
 
 export async function updateUserByAdmin(
   id: number,

@@ -11,6 +11,7 @@ import IngredientsList from "@/components/recipe/IngredientsList";
 import StarRating from '@/components/StarRating';
 import Link from "next/link";
 import {Edit} from "lucide-react";
+import {DeleteRecipeButton} from "@/components/admin/DeleteRecipeButton";
 
 
 export default async function RecipePage({params}: { params: Promise<{ id: string }> }) {
@@ -53,6 +54,9 @@ export default async function RecipePage({params}: { params: Promise<{ id: strin
                 <Edit size={16} className="text-blue-500" />
                 <span className="hidden sm:inline">Редагувати</span>
               </Link>
+              <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
+                <DeleteRecipeButton id={recipe.id} />
+              </div>
             </>
           )}
         </div>

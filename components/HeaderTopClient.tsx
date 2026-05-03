@@ -1,6 +1,6 @@
 "use client";
 
-import {Search, Facebook, Send, Instagram, Bell, User, LogOut, ShieldCheck} from 'lucide-react';
+import {Search, Facebook, Send, Instagram, User, LogOut, ShieldCheck} from 'lucide-react';
 import { useSearch } from "@/hooks/useSearch";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
@@ -37,10 +37,6 @@ export default function HeaderTopClient({ session }: Props) {
           </div>
 
           <div className="flex items-center gap-3 md:gap-4 text-gray-700 font-medium">
-            <div className="relative">
-              <Bell className="w-5 h-5 md:w-6 md:h-6 text-gray-600" />
-              <span className="absolute -top-1 -right-1 bg-[#F2E880] text-[10px] w-3.5 h-3.5 rounded-full flex items-center justify-center font-bold">1</span>
-            </div>
 
             {session ? (
               <div className="flex items-center gap-2">

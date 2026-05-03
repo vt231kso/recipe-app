@@ -22,13 +22,11 @@ export default function Navbar() {
           gap-6 md:gap-8 p-8 md:p-0 font-bold text-gray-800 uppercase tracking-wide text-lg
         `}>
           <Link href="/recipes" className="hover:text-gray-500" onClick={() => setIsOpen(false)}>Рецепти</Link>
-          <Link href="/health" className="hover:text-gray-500" onClick={() => setIsOpen(false)}>Хелсі</Link>
-          <Link href="/tips" className="hover:text-gray-500" onClick={() => setIsOpen(false)}>Лайфхаки</Link>
         </nav>
 
 
         <Link href="/" className="text-3xl md:text-5xl font-serif italic font-black lowercase tracking-tighter shrink-0">
-          shuba
+          cookie
         </Link>
 
         <div className="flex items-center">

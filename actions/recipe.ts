@@ -189,3 +189,32 @@ export async function fetchUserRecipes(userId: number): Promise<RecipePreview[]>
     return [];
   }
 }
+export async function fetchTopRatedRecipes(): Promise<RecipePreview[]> {
+  return (await prisma.recipe.findMany({
+    take: 3,
+    orderBy: {
+      likes: { _count: 'desc' }
+    },
+    include: recipePreviewInclude,
+  })) as RecipePreview[];
+}
+
+export async function fetchEasyRecipes(): Promise<RecipePreview[]> {
+  try {
+    const recipes = await prisma.recipe.findMany({
+      where: {
+        difficulty: 'Easy',
+      },
+      take: 3,
+      orderBy: {
+        createdAt: 'desc',
+      },
+      include: recipePreviewInclude,
+    });
+
+    return recipes as RecipePreview[];
+  } catch (error) {
+    console.error("Помилка при отриманні легких рецептів:", error);
+    return [];
+  }
+}
