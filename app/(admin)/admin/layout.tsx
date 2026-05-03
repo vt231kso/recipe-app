@@ -13,7 +13,11 @@ import {
   MessageSquare
 } from "lucide-react";
 
-export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({
+                                            children,
+                                          }: {
+  children: React.ReactNode;
+}) {
   const session = await auth();
 
   if (session?.user?.role !== "ADMIN") {
@@ -32,36 +36,60 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   ];
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      <aside className="w-64 bg-white border-r border-gray-200 fixed h-full p-6 shadow-sm flex flex-col">
-        <div className="mb-10 px-2">
-          <h1 className="text-2xl font-black text-green-600 tracking-tight">AdminPanel</h1>
+    <div className="min-h-screen bg-gray-50 flex flex-col lg:flex-row">
+
+      {/* Sidebar */}
+      <aside className="w-full lg:w-64 bg-white border-b lg:border-r border-gray-200 lg:min-h-screen p-4 lg:p-6 shadow-sm">
+
+        <div className="mb-6 lg:mb-10 px-2">
+          <h1 className="text-2xl font-black text-green-600 tracking-tight">
+            AdminPanel
+          </h1>
         </div>
 
-        <nav className="space-y-1 flex-1 overflow-y-auto">
+        {/* Навігація */}
+        <nav className="flex lg:flex-col gap-2 overflow-x-auto lg:overflow-visible pb-2">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="flex items-center gap-3 p-3 text-gray-600 hover:bg-green-50 hover:text-green-600 rounded-2xl transition-all font-medium group"
+              className="
+                flex items-center gap-3
+                p-3
+                whitespace-nowrap
+                text-gray-600
+                hover:bg-green-50
+                hover:text-green-600
+                rounded-2xl
+                transition-all
+                font-medium
+                group
+              "
             >
-              <span className="text-gray-400 group-hover:text-green-500 transition-colors">
+              <span className="text-gray-400 group-hover:text-green-500">
                 {item.icon}
               </span>
-              {item.label}
+
+              <span className="text-sm">{item.label}</span>
             </Link>
           ))}
         </nav>
 
-        <div className="mt-auto pt-6 border-t border-gray-100">
-          <Link href="/" className="flex items-center gap-3 p-3 text-gray-400 hover:text-red-500 transition-all font-medium">
-            <LogOut size={20} /> На головну
+        {/* Bottom */}
+        <div className="mt-6 lg:mt-10 pt-4 border-t border-gray-100">
+          <Link
+            href="/"
+            className="flex items-center gap-3 p-3 text-gray-400 hover:text-red-500 transition-all font-medium"
+          >
+            <LogOut size={20} />
+            На головну
           </Link>
         </div>
       </aside>
 
-      <main className="ml-64 flex-1 p-10">
-        <div className="max-w-6xl mx-auto">
+      {/* Main */}
+      <main className="flex-1 p-4 sm:p-6 lg:p-10 overflow-x-hidden">
+        <div className="max-w-7xl mx-auto">
           {children}
         </div>
       </main>
