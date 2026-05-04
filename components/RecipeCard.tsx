@@ -12,7 +12,7 @@ interface RecipeCardProps {
   currentUserId?: number;
 }
 
-export default async function RecipeCard({ recipe, priority = false,currentUserId }: RecipeCardProps) {
+export default function RecipeCard({ recipe, priority = false,currentUserId }: RecipeCardProps) {
 
 
   const isLiked =
