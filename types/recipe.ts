@@ -18,9 +18,24 @@ export type RecipePreview = Prisma.RecipeGetPayload<{
         name: true;
       };
     };
-    likes: true,
-    savedBy: true,
-    _count: { select: { likes: true, savedBy: true } }
+    likes: {
+      select: {
+        userId: true;
+      };
+    };
+
+    savedBy: {
+      select: {
+        userId: true;
+      };
+    };
+
+    _count: {
+      select: {
+        likes: true;
+        savedBy: true;
+      };
+    };
   };
 }>;
 
@@ -73,3 +88,4 @@ export interface IngredientInput {
 export interface StepInput {
   content: string;
 }
+

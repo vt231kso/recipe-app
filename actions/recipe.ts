@@ -18,10 +18,50 @@ const recipePreviewInclude = {
   savedBy: true,
   _count: { select: { likes: true,savedBy: true } }
 } as const;
+const recipePreviewSelect = {
+  id: true,
+  title: true,
+  imageUrl: true,
+  difficulty: true,
+  cookingTime: true,
+  createdAt: true,
 
+  category: {
+    select: {
+      name: true,
+    },
+  },
+
+  author: {
+    select: {
+      name: true,
+    },
+  },
+
+  likes: {
+    select: {
+      userId: true,
+    },
+  },
+
+  savedBy: {
+    select: {
+      userId: true,
+    },
+  },
+
+  _count: {
+    select: {
+      likes: true,
+      savedBy: true,
+    },
+  },
+} as const;
 export async function fetchRecipes(): Promise<RecipePreview[]> {
   const recipes = await prisma.recipe.findMany({
-    include: recipePreviewInclude,
+    // include: recipePreviewInclude,
+    take: 6,
+    select: recipePreviewSelect,
     orderBy: { createdAt: 'desc' }
   });
 
@@ -141,7 +181,8 @@ console.log(params);
 
       cookingTime: params.time ? { lte: parseInt(params.time) } : undefined,
     },
-    include: recipePreviewInclude,
+    select: recipePreviewSelect,
+    // include: recipePreviewInclude,
     orderBy: { createdAt: 'desc' }
   });
 
@@ -157,7 +198,8 @@ export async function fetchSavedRecipes(userId: number): Promise<RecipePreview[]
         }
       }
     },
-    include: recipePreviewInclude,
+    // include: recipePreviewInclude,
+    select: recipePreviewSelect,
     orderBy: { createdAt: 'desc' }
   });
 
@@ -179,7 +221,8 @@ export async function fetchUserRecipes(userId: number): Promise<RecipePreview[]>
       where: {
         authorId: userId
       },
-      include: recipePreviewInclude,
+      // include: recipePreviewInclude,
+      select: recipePreviewSelect,
       orderBy: { createdAt: 'desc' }
     });
 
@@ -195,7 +238,8 @@ export async function fetchTopRatedRecipes(): Promise<RecipePreview[]> {
     orderBy: {
       likes: { _count: 'desc' }
     },
-    include: recipePreviewInclude,
+    // include: recipePreviewInclude,
+    select: recipePreviewSelect,
   })) as RecipePreview[];
 }
 
@@ -209,7 +253,8 @@ export async function fetchEasyRecipes(): Promise<RecipePreview[]> {
       orderBy: {
         createdAt: 'desc',
       },
-      include: recipePreviewInclude,
+      // include: recipePreviewInclude,
+      select: recipePreviewSelect,
     });
 
     return recipes as RecipePreview[];

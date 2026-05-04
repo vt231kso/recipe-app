@@ -33,6 +33,7 @@ export default function LikeButton({
       onClick={handleLikeClick}
       disabled={isPending}
       className="flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-gray-100 transition-colors group disabled:cursor-not-allowed"
+      aria-label={initialIsLiked ? "Прибрати лайк" : "Поставити лайк"}
       title={initialIsLiked ? "Прибрати лайк" : "Поставити лайк"}
     >
       <Heart

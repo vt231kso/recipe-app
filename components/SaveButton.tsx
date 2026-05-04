@@ -31,6 +31,7 @@ export default function SaveButton({
       onClick={handleSaveClick}
       disabled={isPending}
       className="flex items-center justify-center p-2 rounded-full hover:bg-gray-100 transition-colors group disabled:cursor-not-allowed"
+      aria-label={initialIsSaved ? "Видалити зі збереженого" : "Зберегти рецепт"}
       title={initialIsSaved ? "Видалити зі збереженого" : "Зберегти рецепт"}
     >
       <Bookmark
