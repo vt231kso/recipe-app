@@ -12,6 +12,7 @@ export default async function ProfilePage() {
 
   if (!session?.user) {
     redirect("/login");
+    return null;
   }
 
   const userId = Number(session.user.id);
@@ -21,8 +22,8 @@ export default async function ProfilePage() {
   if (!dbUser) {
     redirect("/login");
   }
-  const savedRecipes = await fetchSavedRecipes(userId);
-  const myRecipes = await fetchUserRecipes(userId);
+  const savedRecipes = await fetchSavedRecipes(userId)||[];
+  const myRecipes = await fetchUserRecipes(userId) ||[];
   return (
     <div className="p-8 max-w-6xl mx-auto space-y-12 min-h-screen bg-[#FDFCF9]">
 
@@ -39,7 +40,7 @@ export default async function ProfilePage() {
         <div className="flex items-center gap-4">
           <h2 className="text-3xl font-serif text-gray-900">Мої рецепти</h2>
           <span className="bg-[#86E377] text-black px-3 py-1 rounded-full text-sm font-bold">
-            {myRecipes.length}
+           {myRecipes?.length || 0}
           </span>
         </div>
 
@@ -65,7 +66,7 @@ export default async function ProfilePage() {
           <div className="flex items-center gap-4">
             <h2 className="text-3xl font-serif text-gray-900">Збережені рецепти</h2>
             <span className="bg-[#86E377]/10 text-[#65B756] px-4 py-1 rounded-full text-sm font-bold border border-[#86E377]/20">
-              {savedRecipes.length}
+              {savedRecipes.length || 0}
             </span>
           </div>
 

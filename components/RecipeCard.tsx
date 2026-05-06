@@ -3,7 +3,6 @@ import Link from 'next/link';
 
 import { RecipePreview, RecipeWithDetails } from '@/types/recipe';
 import LikeButton from '@/components/LikeButton';
-import { auth } from "@/auth";
 import SaveButton from '@/components/SaveButton';
 
 interface RecipeCardProps {

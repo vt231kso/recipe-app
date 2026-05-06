@@ -23,7 +23,7 @@ export default function RecipesError({error, reset,}: {
         <h2 className="text-3xl font-serif text-gray-900">Ой! Помилка завантаження</h2>
 
         <p className="text-gray-500 leading-relaxed">
-          Не вдалося отримати список рецептів. Це може бути через тимчасові проблеми з сервером або з'єднанням.
+          Не вдалося отримати список рецептів. Це може бути через тимчасові проблеми з сервером або з&#39;єднанням.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">

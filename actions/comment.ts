@@ -23,7 +23,8 @@ export async function createComment(recipeId: number, formData: FormData,parentI
 
     revalidatePath(`/recipes/${recipeId}`);
     return { success: true };
-  } catch (error) {
+  } catch  (error){
+    console.log("Debug info:", error);
     return { error: "Не вдалося додати коментар" };
   }
 }
@@ -53,6 +54,7 @@ export async function deleteComment(commentId: number, recipeId: number) {
     revalidatePath(`/recipes/${recipeId}`);
     return { success: true };
   } catch (error) {
+    console.log("Debug info:", error);
     return { error: "Помилка при видаленні" };
   }
 }

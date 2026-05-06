@@ -33,7 +33,8 @@ export async function updateRecipe(formData: FormData) {
     revalidatePath(`/recipes/${id}`);
     revalidatePath("/admin/recipes");
     return { success: true, recipeId: updated.id };
-  } catch (error) {
+  } catch  (error){
+    console.log("Debug info:", error);
     return { error: "Помилка при оновленні" };
   }
 }

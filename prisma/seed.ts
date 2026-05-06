@@ -34,12 +34,12 @@ async function main() {
   // 3. Категорії та Кухні
   const catBreakfast = await prisma.category.create({ data: { name: 'Сніданки', slug: 'breakfast' } })
   const catLunch = await prisma.category.create({ data: { name: 'Обіди', slug: 'lunch' } })
-  const catDinner = await prisma.category.create({ data: { name: 'Вечері', slug: 'dinner' } })
-  const catDessert = await prisma.category.create({ data: { name: 'Десерти', slug: 'desserts' } })
+  // const catDinner = await prisma.category.create({ data: { name: 'Вечері', slug: 'dinner' } })
+  // const catDessert = await prisma.category.create({ data: { name: 'Десерти', slug: 'desserts' } })
 
   const cuiUkr = await prisma.cuisine.create({ data: { name: 'Українська' } })
   const cuiIta = await prisma.cuisine.create({ data: { name: 'Італійська' } })
-  const cuiAsian = await prisma.cuisine.create({ data: { name: 'Азіатська' } })
+  // const cuiAsian = await prisma.cuisine.create({ data: { name: 'Азіатська' } })
 
   // 4. Інгредієнти (Словник)
   const ingMilk = await prisma.ingredient.create({ data: { name: 'Молоко' } })
