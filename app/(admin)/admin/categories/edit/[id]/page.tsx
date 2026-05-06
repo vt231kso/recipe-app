@@ -13,7 +13,7 @@ export default async function EditCategory({ params }: PageProps) {
   const category = await adminService.getDirectoryItemById("category", id);
 
   if (!category) {
-    return notFound();
+     notFound();
   }
 
   return (

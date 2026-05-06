@@ -19,7 +19,8 @@ export async function updateProfile(formData: FormData) {
 
     revalidatePath("/profile");
     return { success: true };
-  } catch (e) {
+  } catch  (error){
+    console.log("Debug info:", error);
     return { error: "Помилка при оновленні" };
   }
 }
@@ -63,7 +64,8 @@ export async function updatePassword(formData: FormData) {
     });
 
     return { success: true };
-  } catch (e) {
+  } catch (error) {
+    console.log("Debug info:", error);
     return { error: "Не вдалося оновити пароль" };
   }
 }

@@ -22,7 +22,8 @@ export async function createRecipe(formData: FormData) {
 
     revalidatePath("/recipes");
     return { success: true, recipeId: newRecipe.id };
-  } catch (error) {
+  } catch  (error){
+    console.log("Debug info:", error);
     return { error: "Помилка при створенні" };
   }
 }

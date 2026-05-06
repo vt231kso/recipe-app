@@ -1,4 +1,3 @@
-import { prisma } from "@/lib/prisma";
 import { DirectoryTable } from "@/components/admin/DirectoryTable";
 import Link from "next/link";
 import { Plus } from "lucide-react";

@@ -1,5 +1,6 @@
 "use client";
 import { useRef } from "react";
+import Image from "next/image";
 import { ImagePlus, X } from "lucide-react";
 
 
@@ -19,7 +20,7 @@ export function ImageUpload({ preview, onImageChange, onClear }: ImageUploadProp
       <div className="relative aspect-video w-full">
         {preview ? (
           <div className="relative h-full w-full rounded-[32px] overflow-hidden group">
-            <img src={preview} alt="Preview" className="w-full h-full object-cover" />
+            <Image src={preview} alt="Preview" fill className="w-full h-full object-cover" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
             <button
               type="button"
               onClick={onClear}

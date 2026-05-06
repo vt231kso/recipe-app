@@ -1,4 +1,3 @@
-import { prisma } from "@/lib/prisma";
 import RecipeForm from "@/components/RecipeForm";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";

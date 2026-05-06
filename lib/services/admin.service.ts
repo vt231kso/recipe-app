@@ -95,10 +95,13 @@ export const adminService = {
     });
   },
   async getDirectoryItemById(type: "category" | "cuisine" | "dietaryNeed" | "ingredient", id: number) {
-    const model = prisma[type] as any;
-    return await model.findUnique({
-      where: { id },
-    });
+    switch (type) {
+      case "category": return await prisma.category.findUnique({ where: { id } });
+      case "cuisine": return await prisma.cuisine.findUnique({ where: { id } });
+      case "dietaryNeed": return await prisma.dietaryNeed.findUnique({ where: { id } });
+      case "ingredient": return await prisma.ingredient.findUnique({ where: { id } });
+      default: return null;
+    }
   },
 };
 

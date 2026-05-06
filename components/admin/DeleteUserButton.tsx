@@ -17,6 +17,7 @@ export function DeleteUserButton({ userId, userName }: { userId: number, userNam
         alert(result.error);
       }
     } catch (error) {
+      console.log("Debug info:", error);
       alert("Сталася помилка при видаленні");
     } finally {
       setIsDeleting(false);

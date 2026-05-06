@@ -7,11 +7,16 @@ import { updateUserByAdmin, createUserByAdmin } from "@/actions/admin";
 interface Props {
   initialData?: { id: number; name: string; email: string; role: string };
 }
-
+interface UserFormData {
+  name: string;
+  email: string;
+  password: string;
+  role: string;
+}
 export function UserForm({ initialData }: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<UserFormData>({
     name: initialData?.name || "",
     email: initialData?.email || "",
     password: "",
@@ -24,7 +29,10 @@ export function UserForm({ initialData }: Props) {
 
     const res = initialData
       ? await updateUserByAdmin(initialData.id, formData)
-      : await createUserByAdmin(formData as any);
+      : await createUserByAdmin({name: formData.name,
+      email: formData.email,
+      role: formData.role,
+      password: formData.password});
 
     if (res.success) {
       router.push("/admin/users");
@@ -38,7 +46,7 @@ export function UserForm({ initialData }: Props) {
   return (
     <form onSubmit={handleSubmit} className="bg-white p-8 rounded-[32px] border shadow-sm space-y-4 max-w-xl">
       <div>
-        <label className="block text-sm font-bold text-gray-700 mb-2">Ім'я</label>
+        <label className="block text-sm font-bold text-gray-700 mb-2">Ім&#39;я</label>
         <input
           value={formData.name}
           onChange={e => setFormData({...formData, name: e.target.value})}

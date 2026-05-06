@@ -168,7 +168,8 @@ export async function deleteDirectoryItem(type: DirectoryType, id: number) {
     revalidatePath("/admin/dietary-needs");
 
     return {success: true};
-  } catch (error) {
+  } catch  (error){
+    console.log("DEBUG_INFO:", error);
     return {error: "Неможливо видалити: цей елемент використовується в рецептах."};
   }
 }
@@ -193,6 +194,7 @@ export async function createUserByAdmin(data: { name: string, email: string, pas
     revalidatePath("/admin/users");
     return { success: true };
   } catch (error) {
+    console.log("Debug info:", error);
     return { error: "Користувач з таким email вже існує" };
   }
 }
@@ -239,6 +241,7 @@ export async function deleteComment(id: number) {
     revalidatePath("/admin/comments");
     return { success: true };
   } catch (error) {
+    console.log("Debug info:", error);
     return { error: "Не вдалося видалити коментар." };
   }
 }

@@ -47,7 +47,8 @@ export function useRecipeSubmit(recipeId?: number, initialImageUrl?: string | nu
         router.push(`/recipes/${result.recipeId}`);
         router.refresh();
       }
-    } catch (e) {
+    } catch  (error){
+      console.log("Debug info:", error);
       setServerError("Щось пішло не так при збереженні");
     } finally {
       setIsPending(false);
