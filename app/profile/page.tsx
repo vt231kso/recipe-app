@@ -47,7 +47,7 @@ export default async function ProfilePage() {
         {myRecipes.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {myRecipes.map((recipe) => (
-              <RecipeCard key={recipe.id} recipe={recipe} />
+              <RecipeCard key={recipe.id} recipe={recipe} currentUserId={userId}/>
             ))}
           </div>
         ) : (
@@ -80,7 +80,7 @@ export default async function ProfilePage() {
         {savedRecipes.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {savedRecipes.map((recipe) => (
-              <RecipeCard key={recipe.id} recipe={recipe} />
+              <RecipeCard key={recipe.id} recipe={recipe} currentUserId={userId} />
             ))}
           </div>
         ) : (

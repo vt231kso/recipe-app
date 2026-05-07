@@ -27,12 +27,14 @@ export default function RecipeCard({ recipe, priority = false,currentUserId }: R
 
       <div className="absolute top-4 right-4 z-20 flex flex-col items-center bg-white/80 backdrop-blur-sm p-1.5 rounded-2xl shadow-sm border border-white/50">
         <LikeButton
+          key={`like-${recipe.id}-${isLiked}`}
           recipeId={recipe.id}
           initialIsLiked={isLiked}
           likesCount={likesCount}
         />
         <div className="h-px w-full bg-gray-200 my-1" aria-hidden="true" />
         <SaveButton
+          key={`save-${recipe.id}-${isSaved}`}
           recipeId={recipe.id}
           initialIsSaved={isSaved}
         />
