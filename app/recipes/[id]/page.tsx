@@ -21,12 +21,12 @@ export default async function RecipePage({params}: { params: Promise<{ id: strin
   const session = await auth();
   const userId = Number(session?.user?.id);
 
-  const recipe = await fetchRecipeById(recipeId,userId);
+  const recipe = await fetchRecipeById(recipeId, userId);
 
   if (!recipe) {
     notFound();
   }
- const isLiked = recipe.likes?.some(like => like.userId === userId) || false;
+  const isLiked = recipe.likes?.some(like => like.userId === userId) || false;
   const likesCount = recipe._count?.likes || 0;
   const isSaved = recipe.savedBy?.some(save => save.userId === userId) || false;
   const relatedRecipes = (await fetchRelatedRecipes(recipe.category.id, recipe.id));
@@ -46,16 +46,16 @@ export default async function RecipePage({params}: { params: Promise<{ id: strin
           />
           {session?.user?.id === recipe.authorId.toString() && (
             <>
-              <div className="w-px h-8 bg-gray-200"/>
+              <div aria-hidden="true" className="w-px h-8 bg-gray-200"/>
               <Link
                 href={`/recipes/edit/${recipe.id}`}
                 className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-100 rounded-2xl hover:bg-gray-50 hover:border-gray-200 transition-all text-sm font-bold text-gray-600 shadow-sm"
               >
-                <Edit size={16} className="text-blue-500" />
+                <Edit aria-hidden="true" size={16} className="text-blue-500"/>
                 <span className="hidden sm:inline">Редагувати</span>
               </Link>
               <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
-                <DeleteRecipeButton id={recipe.id} />
+                <DeleteRecipeButton id={recipe.id}/>
               </div>
             </>
           )}
@@ -63,9 +63,9 @@ export default async function RecipePage({params}: { params: Promise<{ id: strin
         <div className="flex flex-col items-center gap-3 mb-6 md:mb-8">
 
           <div className="flex items-center gap-2 text-sm font-bold text-gray-700">
-            <span className="text-yellow-500 text-xl">★</span>
+            <span aria-hidden="true" className="text-yellow-500 text-xl">★</span>
             <span>{recipe.avgRating}</span>
-            <span className="text-gray-400 font-medium">({recipe.totalRatings} відгуків)</span>
+            <span className="text-gray-600 font-medium">({recipe.totalRatings} відгуків)</span>
           </div>
         </div>
         <h1 className="text-3xl md:text-6xl font-serif leading-tight text-gray-950 mb-6 md:mb-8 px-2">
@@ -84,16 +84,20 @@ export default async function RecipePage({params}: { params: Promise<{ id: strin
           </div>
         )}
         <div className="flex flex-col items-center gap-2 mb-8">
-          <p className="text-xs uppercase tracking-widest text-gray-400 font-bold">Оцініть рецепт</p>
-          <StarRating recipeId={recipeId} initialRating={recipe.userRating} />
+          <p className="text-xs uppercase tracking-widest text-gray-600 font-bold">Оцініть рецепт</p>
+          <StarRating recipeId={recipeId} initialRating={recipe.userRating}/>
         </div>
         <div
-          className="flex justify-center items-center gap-3 md:gap-6 md:text-sm font-bold text-gray-400 uppercase tracking-widest border-y border-gray-100 py-4 md:py-6">
+          className="flex justify-center items-center gap-3 md:gap-6 md:text-sm font-bold text-gray-600 uppercase tracking-widest border-y border-gray-100 py-4 md:py-6">
           <span className="text-[#65B756]">{recipe.category.name}</span>
           <span className="hidden sm:inline">•</span>
-          <span>⏱ {recipe.cookingTime} хв</span>
+          <span aria-label={`Час приготування ${recipe.cookingTime} хвилин`}>
+  ⏱ {recipe.cookingTime} хв
+</span>
           <span className="hidden sm:inline">•</span>
-          <span>📊 {recipe.difficulty}</span>
+          <span aria-label={`Складність ${recipe.difficulty}`}>
+  📊 {recipe.difficulty}
+</span>
           <span className="hidden sm:inline">•</span>
           <span className="normal-case italic font-medium text-gray-600 sm:w-auto mt-2 sm:mt-0">
             від {recipe.author.name || 'Аноніма'}

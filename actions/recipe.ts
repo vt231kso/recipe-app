@@ -150,7 +150,6 @@ export async function fetchFilterOptions(): Promise<FilterOptions> {
 }
 
 export async function fetchFilteredRecipes(params: FilterParams): Promise<RecipePreview[]> {
-console.log(params);
   const parseIds = (idString?: string): number[] | undefined =>
     idString ? idString.split(",").map(id => parseInt(id)).filter(id => !isNaN(id)) : undefined;
 

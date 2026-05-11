@@ -59,7 +59,11 @@ export function IngredientsSection() {
             <div key={field.id} className="space-y-2">
               <div className="flex flex-col sm:flex-row gap-3 animate-in slide-in-from-top-2">
                 <div className="flex-[3]">
+                  <label htmlFor={`ingredient-name-${index}`} className="sr-only">
+                    Назва інгредієнта
+                  </label>
                   <input
+                    id={`ingredient-name-${index}`}
                     {...register(`ingredients.${index}.name`)}
                     placeholder="Назва (напр. Борошно)"
                     className={getInputStyles(!!rowError?.name)}
@@ -67,13 +71,20 @@ export function IngredientsSection() {
                 </div>
 
                 <div className="flex flex-row gap-2 flex-1">
+                  <label htmlFor={`ingredient-amount-${index}`} className="sr-only">
+                    Кількість
+                  </label>
                   <input
+                    id={`ingredient-amount-${index}`}
                     {...register(`ingredients.${index}.amount`)}
                     placeholder="К-сть"
                     className={getInputStyles(!!rowError?.amount)}
                   />
-
+                  <label htmlFor={`ingredient-unit-${index}`} className="sr-only">
+                    Одиниця вимірювання
+                  </label>
                   <input
+                    id={`ingredient-unit-${index}`}
                     {...register(`ingredients.${index}.unit`)}
                     placeholder="Од."
                     className={`${getInputStyles(
@@ -84,6 +95,7 @@ export function IngredientsSection() {
 
                 <button
                   type="button"
+                  aria-label={`Видалити інгредієнт ${index + 1}`}
                   onClick={() => remove(index)}
                   className="p-4 text-gray-300 hover:text-red-500 transition-colors"
                 >

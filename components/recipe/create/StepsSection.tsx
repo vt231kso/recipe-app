@@ -77,7 +77,11 @@ export function StepsSection() {
               )}
 
               <div className="space-y-2">
+                <label htmlFor={`step-${index}`} className="sr-only">
+                  Крок {index + 1}
+                </label>
                 <textarea
+                  id={`step-${index}`}
                   {...register(`steps.${index}.content`)}
                   placeholder="Опишіть, що потрібно зробити на цьому етапі..."
                   rows={3}
@@ -93,6 +97,7 @@ export function StepsSection() {
                 {fields.length > 1 && (
                   <button
                     type="button"
+                    aria-label={`Видалити крок ${index + 1}`}
                     onClick={() => remove(index)}
                     className="text-xs font-bold text-red-400 uppercase hover:text-red-600 transition-colors"
                   >

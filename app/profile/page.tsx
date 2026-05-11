@@ -52,8 +52,8 @@ export default async function ProfilePage() {
           </div>
         ) : (
           <div className="text-center py-12 bg-white rounded-3xl border border-gray-100">
-            <p className="text-gray-400">Ви ще не опублікували жодного рецепта.</p>
-            <Link href="/recipes/create" className="text-[#86E377] font-bold hover:underline">
+            <p className="text-gray-600">Ви ще не опублікували жодного рецепта.</p>
+            <Link href="/recipes/create" className="inline-flex items-center min-h-[44px] text-[#4E9F3D] font-bold hover:underline">
               Створити перший рецепт
             </Link>
           </div>
@@ -71,7 +71,7 @@ export default async function ProfilePage() {
           </div>
 
           {savedRecipes.length > 0 && (
-            <Link href="/" className="text-sm font-bold text-gray-400 hover:text-gray-600 transition-colors">
+            <Link href="/" className="text-sm font-bold text-gray-600 hover:text-gray-600 transition-colors">
               Шукати ще рецепти →
             </Link>
           )}
@@ -86,14 +86,15 @@ export default async function ProfilePage() {
         ) : (
           <div className="text-center py-24 bg-white rounded-[40px] border-2 border-dashed border-gray-100 flex flex-col items-center">
             <div className="bg-gray-50 p-4 rounded-full mb-4">
-              <svg className="w-12 h-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-12 h-12 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
             </div>
-            <p className="text-gray-400 font-serif text-xl">Ваша кулінарна книга поки порожня.</p>
+            <p className="text-gray-600 font-serif text-xl">Ваша кулінарна книга поки порожня.</p>
             <Link
+              aria-label="Перейти до пошуку рецептів"
               href="/"
-              className="mt-4 px-8 py-3 bg-[#86E377] text-white rounded-2xl font-bold hover:bg-[#75d266] transition-all shadow-lg shadow-[#86E377]/20"
+              className="text-sm font-bold text-gray-600 hover:text-gray-800 transition-colors min-h-[44px] flex items-center"
             >
               Знайти смачненьке
             </Link>

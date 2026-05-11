@@ -18,7 +18,7 @@ export function BasicInfoSection({ categories, cuisines }: BasicInfoProps) {
     : "border-transparent focus:border-green-500/20 focus:bg-white"}
   `;
 
-  const labelStyles = "flex items-center gap-2 text-sm font-bold text-gray-400 uppercase tracking-wider mb-2 ml-1";
+  const labelStyles = "flex items-center gap-2 text-sm font-bold text-gray-600 uppercase tracking-wider mb-2 ml-1";
   const errorStyles = "text-red-500 text-xs mt-2 font-bold ml-1 flex items-center gap-1";
 
   return (
@@ -30,8 +30,9 @@ export function BasicInfoSection({ categories, cuisines }: BasicInfoProps) {
 
       <div className="space-y-6">
         <div>
-          <label className={labelStyles}>Назва</label>
+          <label htmlFor="title" className={labelStyles}>Назва</label>
           <input
+            id="title"
             {...register("title")}
             placeholder="Наприклад: Гарбузовий крем-суп"
             className={`${getInputStyles("title")} text-xl font-medium`}
@@ -40,8 +41,9 @@ export function BasicInfoSection({ categories, cuisines }: BasicInfoProps) {
         </div>
 
         <div>
-          <label className={labelStyles}>Опис</label>
+          <label htmlFor="description" className={labelStyles}>Опис</label>
           <textarea
+            id="description"
             {...register("description")}
             placeholder="Коротка історія страви..."
             rows={3}
@@ -52,8 +54,9 @@ export function BasicInfoSection({ categories, cuisines }: BasicInfoProps) {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div>
-            <label className={labelStyles}><Clock size={16} /> Час (хв)</label>
+            <label htmlFor="cookingTime" className={labelStyles}><Clock size={16} /> Час (хв)</label>
             <input
+              id="cookingTime"
               type="number"
               {...register("cookingTime")}
               className={getInputStyles("cookingTime")}
@@ -62,8 +65,8 @@ export function BasicInfoSection({ categories, cuisines }: BasicInfoProps) {
           </div>
 
           <div>
-            <label className={labelStyles}><ChefHat size={16} /> Складність</label>
-            <select {...register("difficulty")} className={getInputStyles("difficulty")}>
+            <label htmlFor="difficulty" className={labelStyles}><ChefHat size={16} /> Складність</label>
+            <select  id="difficulty" {...register("difficulty")} className={getInputStyles("difficulty")}>
               <option value="Easy">Легко</option>
               <option value="Medium">Середньо</option>
               <option value="Hard">Складно</option>
@@ -72,16 +75,16 @@ export function BasicInfoSection({ categories, cuisines }: BasicInfoProps) {
           </div>
 
           <div>
-            <label className={labelStyles}><Utensils size={16} /> Категорія</label>
-            <select {...register("categoryId")} className={getInputStyles("categoryId")}>
+            <label htmlFor="categoryId"  className={labelStyles}><Utensils size={16} /> Категорія</label>
+            <select   id="categoryId" {...register("categoryId")} className={getInputStyles("categoryId")}>
               <option value={0}>Оберіть категорію</option>
               {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
             {errors.categoryId && <p className={errorStyles}>{errors.categoryId.message as string}</p>}
           </div>
           <div>
-            <label className={labelStyles}><Globe size={16} /> Кухня</label>
-            <select {...register("cuisineId")} className={getInputStyles("cuisineId")}>
+            <label htmlFor="cuisineId"  className={labelStyles}><Globe size={16} /> Кухня</label>
+            <select   id="cuisineId" {...register("cuisineId")} className={getInputStyles("cuisineId")}>
               <option value={0}>Оберіть кухню</option>
               {cuisines.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
