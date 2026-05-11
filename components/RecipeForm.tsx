@@ -11,8 +11,16 @@ import { useRecipeSubmit } from "@/hooks/use-recipe-submit";
 import { ImageUpload } from "@/components/recipe/create/ImageUpload";
 import { BasicInfoSection } from "@/components/recipe/create/BasicInfoSection";
 import { DietarySelection } from "@/components/recipe/create/DietarySelection";
-import { IngredientsSection } from "@/components/recipe/create/IngredientsSection";
-import { StepsSection } from "@/components/recipe/create/StepsSection";
+import dynamic from "next/dynamic";
+
+const IngredientsSection = dynamic(
+  () => import("@/components/recipe/create/IngredientsSection").then(m => ({ default: m.IngredientsSection })),
+  { ssr: false }
+);
+const StepsSection = dynamic(
+  () => import("@/components/recipe/create/StepsSection").then(m => ({ default: m.StepsSection })),
+  { ssr: false }
+);
 
 interface DirectoryItem {
   id: number;

@@ -97,7 +97,7 @@ export function IngredientsSection() {
                   type="button"
                   aria-label={`Видалити інгредієнт ${index + 1}`}
                   onClick={() => remove(index)}
-                  className="p-4 text-gray-300 hover:text-red-500 transition-colors"
+                  className="p-4 text-gray-500 hover:text-red-500 transition-colors"
                 >
                   <Trash2 size={20} />
                 </button>
@@ -120,7 +120,7 @@ export function IngredientsSection() {
         }
         className={`w-full py-4 border-2 border-dashed rounded-2xl font-bold flex items-center justify-center gap-2 transition-all ${
           errors.ingredients && fields.length === 0
-            ? "border-red-300 text-red-500 bg-red-50"
+            ? "border-red-500 text-red-500 bg-red-50"
             : "border-gray-200 text-gray-400 hover:border-green-200 hover:text-green-600"
         }`}
       >
