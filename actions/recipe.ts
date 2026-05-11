@@ -205,7 +205,7 @@ export async function fetchSavedRecipes(userId: number): Promise<RecipePreview[]
   return recipes as RecipePreview[];
 }
 
-export  function getRecipeMetadata() {
+export async function getRecipeMetadata() {
   return  Promise.all([
     prisma.category.findMany({ orderBy: { name: 'asc' } }),
     prisma.cuisine.findMany({ orderBy: { name: 'asc' } }),
