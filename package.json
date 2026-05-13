@@ -12,7 +12,6 @@
     "test:coverage": "jest --coverage"
   },
   "dependencies": {
-    "-": "^0.0.1",
     "@auth/prisma-adapter": "^2.11.1",
     "@hookform/resolvers": "^5.2.2",
     "@mermaid-js/mermaid-cli": "^11.14.0",
