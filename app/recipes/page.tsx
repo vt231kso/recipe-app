@@ -13,6 +13,7 @@ interface RecipesPageProps {
     dietary?: string;
     time?: string;
     ingredient?: string;
+    page?: string;
   }>;
 }
 

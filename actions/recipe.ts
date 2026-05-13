@@ -10,6 +10,7 @@ export interface FilterParams {
   dietary?: string;
   time?: string;
   ingredient?: string;
+  page?: string;
 }
 const recipePreviewInclude = {
   category: { select: { name: true } },
@@ -149,7 +150,14 @@ export async function fetchFilterOptions(): Promise<FilterOptions> {
   return { categories, cuisines, dietaryNeeds, ingredients };
 }
 
-export async function fetchFilteredRecipes(params: FilterParams): Promise<RecipePreview[]> {
+export async function fetchFilteredRecipes(params: FilterParams): Promise<{
+  recipes: RecipePreview[];
+  totalPages: number;
+}> {
+  const currentPage = Number(params.page) || 1;
+  const recipesPerPage = 6;
+
+  const skip = (currentPage - 1) * recipesPerPage;
   const parseIds = (idString?: string): number[] | undefined =>
     idString ? idString.split(",").map(id => parseInt(id)).filter(id => !isNaN(id)) : undefined;
 
@@ -182,10 +190,43 @@ export async function fetchFilteredRecipes(params: FilterParams): Promise<Recipe
     },
     select: recipePreviewSelect,
     // include: recipePreviewInclude,
-    orderBy: { createdAt: 'desc' }
-  });
+    orderBy: { createdAt: 'desc' },
+    skip,
+    take: recipesPerPage,
 
-  return recipes as RecipePreview[];
+  });
+  const totalRecipes = await prisma.recipe.count({
+    where: {
+      OR: params.query ? [
+        { title: { contains: params.query, mode: 'insensitive' } },
+        { description: { contains: params.query, mode: 'insensitive' } }
+      ] : undefined,
+
+      category: params.category ? {
+        slug: { in: parseSlugs(params.category) }
+      } : undefined,
+
+      cuisineId: params.cuisine ? {
+        in: parseIds(params.cuisine)
+      } : undefined,
+
+      dietaryNeeds: params.dietary ? {
+        some: { id: { in: parseIds(params.dietary) } }
+      } : undefined,
+
+      ingredients: params.ingredient ? {
+        some: { ingredientId: { in: parseIds(params.ingredient) } }
+      } : undefined,
+
+      cookingTime: params.time ? {
+        lte: parseInt(params.time)
+      } : undefined,
+    }
+  });
+  return {
+    recipes: recipes as RecipePreview[],
+    totalPages: Math.ceil(totalRecipes / recipesPerPage),
+  };
 }
 
 export async function fetchSavedRecipes(userId: number): Promise<RecipePreview[]> {

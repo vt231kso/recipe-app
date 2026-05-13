@@ -1,22 +1,15 @@
-import { fetchFilteredRecipes } from "@/actions/recipe";
 import RecipeCard from "@/components/RecipeCard";
 import { auth } from "@/auth";
+import { fetchFilteredRecipes, FilterParams } from "@/actions/recipe";
 interface RecipeListProps {
-  params: {
-    query?: string;
-    category?: string;
-    cuisine?: string;
-    dietary?: string;
-    time?: string;
-    ingredient?: string;
-  };
+  params: FilterParams;
 }
+import Pagination from "@/components/Pagination";
 
 export default async function RecipeList({ params }: RecipeListProps) {
   const session = await auth(); // Отримуємо сесію
   const userId = Number(session?.user?.id); // Дістаємо ID користувача
-  const recipes = await fetchFilteredRecipes(params);
-
+  const { recipes, totalPages } = await fetchFilteredRecipes(params);
   if (recipes.length === 0) {
     return (
       <div className="py-32 text-center">
@@ -31,10 +24,17 @@ export default async function RecipeList({ params }: RecipeListProps) {
   }
 
   return (
+    <>
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-16 mt-12">
       {recipes.map((recipe) => (
         <RecipeCard key={recipe.id} recipe={recipe} currentUserId={userId} />
       ))}
     </div>
+  <Pagination
+    currentPage={Number(params.page) || 1}
+    totalPages={totalPages}
+    params={params}
+  />
+      </>
   );
 }
