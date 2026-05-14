@@ -10,6 +10,7 @@ import { fetchUserRecipes } from "@/actions/recipe";
 export default async function ProfilePage() {
   const session = await auth();
 
+
   if (!session?.user) {
     redirect("/login");
     return null;

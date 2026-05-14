@@ -13,9 +13,26 @@ export function DirectoryForm({ type, initialData }: Props) {
   const router = useRouter();
   const [name, setName] = useState(initialData?.name || "");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+
+    const trimmedName = name.trim();
+
+    // Мінімум 3 букви
+    if (trimmedName.length < 3) {
+      setError("Назва повинна містити мінімум 3 символи");
+      return;
+    }
+
+    const regex = /^[a-zA-Zа-яА-ЯіІїЇєЄґҐ\s'-]+$/;
+
+    if (!regex.test(trimmedName)) {
+      setError("Назва повинна містити тільки букви");
+      return;
+    }
     setLoading(true);
 
     const res = await saveDirectoryItem(type, { id: initialData?.id, name });
@@ -30,7 +47,7 @@ export function DirectoryForm({ type, initialData }: Props) {
       router.push(returnPath);
       router.refresh();
     } else {
-      alert(res.error);
+      setError(res.error || "Сталася помилка");
       setLoading(false);
     }
   };
@@ -48,6 +65,12 @@ export function DirectoryForm({ type, initialData }: Props) {
           placeholder={type === "cuisine" ? "Наприклад: Італійська" : "Введіть назву..."}
         />
       </div>
+      {error && (
+        <p className="text-red-500 text-sm font-medium">
+          {error}
+        </p>
+      )}
+
       <div className="flex gap-3">
         <button
           type="button"

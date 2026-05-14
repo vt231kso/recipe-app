@@ -14,7 +14,7 @@ type UserProps = {
 
 export default function EditProfileForm({ user }: UserProps) {
   const [isEditing, setIsEditing] = useState(false);
-
+  const [error, setError] = useState("");
   async function handleSubmit(formData: FormData) {
     const result = await updateProfile(formData);
 
@@ -22,7 +22,7 @@ export default function EditProfileForm({ user }: UserProps) {
       setIsEditing(false);
       alert("Дані оновлено успішно!");
     } else {
-      alert(result.error);
+      setError(result.error || "Сталася помилка");
     }
   }
 
@@ -61,6 +61,12 @@ export default function EditProfileForm({ user }: UserProps) {
               />
             </div>
           </div>
+          {error && (
+            <p className="text-red-500 text-sm font-medium">
+              {error}
+            </p>
+          )}
+
           <div className="flex gap-3 pt-2">
             <button type="submit" className="px-8 py-3 bg-gray-900 text-white rounded-2xl font-bold text-sm">
               Зберегти зміни

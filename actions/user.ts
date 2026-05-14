@@ -11,6 +11,19 @@ export async function updateProfile(formData: FormData) {
   const name = formData.get("name") as string;
   const email = formData.get("email") as string;
 
+  if (!name) {
+    return { error: "Ім'я не може бути порожнім" };
+  }
+
+  if (!email) {
+    return { error: "Email не може бути порожнім" };
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!emailRegex.test(email)) {
+    return { error: "Некоректний email" };
+  }
   try {
     await prisma.user.update({
       where: { id: Number(session.user.id) },

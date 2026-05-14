@@ -80,6 +80,21 @@ export async function saveDirectoryItem(
   data: { id?: number; name: string }
 ) {
   await checkAdmin();
+  const trimmedName = data.name.trim();
+
+  if (trimmedName.length < 3) {
+    return {
+      error: "Назва повинна містити мінімум 3 символи",
+    };
+  }
+
+  const regex = /^[a-zA-Zа-яА-ЯіІїЇєЄґҐ\s'-]+$/;
+
+  if (!regex.test(trimmedName)) {
+    return {
+      error: "Назва повинна містити тільки букви",
+    };
+  }
   const formattedName = capitalize(data.name);
   try {
     if (data.id) {
@@ -179,6 +194,31 @@ import bcrypt from "bcryptjs";
 
 export async function createUserByAdmin(data: { name: string, email: string, password: string, role: string }) {
   await checkAdmin();
+  const name = data.name.trim();
+  const email = data.email.trim();
+  const password = data.password.trim();
+
+  if (!name) {
+    return { error: "Ім'я не може бути порожнім" };
+  }
+
+  if (!email) {
+    return { error: "Email не може бути порожнім" };
+  }
+
+  if (!password) {
+    return { error: "Пароль не може бути порожнім" };
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!emailRegex.test(email)) {
+    return { error: "Некоректний email" };
+  }
+
+  if (password.length < 6) {
+    return { error: "Пароль має містити мінімум 6 символів" };
+  }
 
   const hashedPassword = await bcrypt.hash(data.password, 10);
 
@@ -205,6 +245,21 @@ export async function updateUserByAdmin(
   data: { name: string; email: string; password?: string; role: string }
 ) {
   await checkAdmin();
+  const name = data.name.trim();
+  const email = data.email.trim();
+  if (!name) {
+    return { error: "Ім'я не може бути порожнім" };
+  }
+
+  if (!email) {
+    return { error: "Email не може бути порожнім" };
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!emailRegex.test(email)) {
+    return { error: "Некоректний email" };
+  }
 
   try {
     const updateData: Prisma.UserUpdateInput = {

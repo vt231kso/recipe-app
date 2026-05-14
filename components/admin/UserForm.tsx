@@ -16,6 +16,7 @@ interface UserFormData {
 export function UserForm({ initialData }: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState<UserFormData>({
     name: initialData?.name || "",
     email: initialData?.email || "",
@@ -38,7 +39,7 @@ export function UserForm({ initialData }: Props) {
       router.push("/admin/users");
       router.refresh();
     } else {
-      alert(res.error);
+      setError(res.error || "Сталася помилка");
       setLoading(false);
     }
   };
@@ -88,7 +89,11 @@ export function UserForm({ initialData }: Props) {
           <option value="ADMIN">Адміністратор (ADMIN)</option>
         </select>
       </div>
-
+      {error && (
+        <p className="text-sm text-red-500 font-medium">
+          {error}
+        </p>
+      )}
       <div className="pt-4 flex gap-3">
         <button
           type="button"
