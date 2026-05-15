@@ -33,6 +33,7 @@ export function useSearch(): UseSearchReturn {
       } else {
         params.delete("query");
       }
+      params.set("page", "1");
       router.push(`/recipes?${params.toString()}`, { scroll: false });
     }, 500);
 

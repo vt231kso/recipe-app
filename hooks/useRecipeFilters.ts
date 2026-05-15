@@ -18,7 +18,7 @@ export function useRecipeFilters() {
     } else {
       params.delete(key);
     }
-
+    params.set("page", "1");
     startTransition(() => {
       router.push(`/recipes?${params.toString()}`, { scroll: false });
     });
